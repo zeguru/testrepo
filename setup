@@ -22,3 +22,6 @@ chattr +i ../../systems/runtime.xml
 
 mv sesame.lib.jar ../../build/sesame.lib.jar -f
 mv sesame.jar ../../build/sesame.jar -f
+
+#COMMIT
+svn commit -m
