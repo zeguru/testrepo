@@ -1,0 +1,17 @@
+#/bin/sh
+
+cd $(dirname $0)
+
+CLASSPATH=".:../../build/lib/jasperreports-3.5.2.jar:../../build/lib/mail.jar:../../build/lib/poi-3.2-FINAL-20081019.jar:../../build/lib/quaqua.jar:../../build/lib/oalnf.jar:"
+javac -classpath $CLASSPATH org/elegance/*.java
+jar cmf libmanifest sesame.lib.jar org/elegance/*.class org/elegance/images
+
+CLASSPATH=".:sesame.lib.jar:../../build/lib/liquidlnf.jar:../../build/lib/looks-2.2.2.jar:../../build/lib/oalnf.jar:../../build/lib/quaqua.jar:"
+javac -classpath $CLASSPATH *.java
+jar cmf manifest sesame.jar sesame.class
+
+jarsigner -keystore ../../build/lib/barazasign -storepass invent -keypass invent sesame.lib.jar SignDewCis
+jarsigner -keystore ../../build/lib/barazasign -storepass invent -keypass invent sesame.jar SignDewCis
+
+mv sesame.lib.jar ../../build/sesame.lib.jar -f
+mv sesame.jar ../../build/sesame.jar -f

@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<project name="Sesame">
+
+	<property name="lib.dir" value="../../build/lib/"/>
+	
+	<path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+
+	<path id="appclasspath">
+	
+		<fileset dir=".">
+			<include name="sesame.lib.jar"/>
+		</fileset>		
+		
+	</path>
+
+	<!--
+	
+	<project name="Sesame" default="jar">
+		<target name="clean" description="remove intermediate files">
+			<delete dir="build"/>
+		</target>
+	
+    <target name="clobber" depends="clean" description="remove all artifact files">
+        <delete file="build/Sesame.jar"/>
+    </target>	
+	
+	-->
+
+	<target name="clean" description="remove old class files">
+        <delete dir="../../build/classes"/>		
+		<mkdir dir="../../build/classes"/>
+		<delete dir="../../build/signed"/>
+		<mkdir dir="../../build/signed"/>
+    </target>
+	
+	<target name="libs" depends="clean" description="compile the libs then build a jar file">
+		
+        <javac srcdir="org/elegance" destdir="../../build/classes" classpathref="classpath"/>
+		
+		<jar destfile="../../build/sesame.lib.jar" manifest="libmanifest">
+			<fileset dir="." includes ="**/*.jpg,**/*.jpeg,**/*.gif"/>
+			<fileset dir="../../build/classes">
+				<include name="**/*.class"/>				
+			</fileset>		
+			<manifest>
+				<attribute name="Vendor" value="Software Elegance Ltd"/>
+				<attribute name="System" value="Open Sesame Framework"/>
+				<attribute name="Version" value="1.0.0 beta 1"/>
+			</manifest>
+        </jar>
+		
+    </target>	
+
+	<target name="app" depends="libs" description="create a Jar file of the app">	
+		<javac srcdir="." destdir="." classpathref="appclasspath"/>
+	
+		<jar destfile="../../build/sesame.jar" manifest="manifest">			
+			<fileset file="sesame.class" />				    
+        </jar>
+    </target>
+
+	<target name="sign" depends="app" description="sign the java class files">
+		<mkdir dir="../../build/signed"/>
+        <signjar destDir="../../build/signed"  alias="SesameSign" keystore="../../build/lib/SesameSign" storepass="opensimsim" keypass="sesameitis" jar="sesame.lib.jar" preservelastmodified="true" />
+		<signjar destDir="../../build/signed"  alias="SesameSign" keystore="../../build/lib/SesameSign" storepass="opensimsim" keypass="sesameitis" jar="sesame.jar" preservelastmodified="true" />		
+    </target>	
+	
+</project>
