@@ -57,7 +57,7 @@ public class AboutSesame extends javax.swing.JInternalFrame {
         jLabel3.setText("Approved for " + application);
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        jLabel4.setIcon(new javax.swing.ImageIcon("/usr/sesame/build/images/sailing.jpg")); // NOI18N
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("images/sailing.jpg"))); // NOI18N
 		//jLabel4.setIcon(new javax.swing.ImageIcon("/usr/sesame/build/images/partner.jpg")); // NOI18N
         jLabel4.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
 		jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
