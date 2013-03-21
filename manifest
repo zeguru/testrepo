@@ -1,0 +1,2 @@
+Main-Class: sesame
+Class-Path: sesame.lib.jar lib/liquidlnf.jar lib/looks-2.2.2.jar lib/oalnf.jar lib/quaqua.jar
