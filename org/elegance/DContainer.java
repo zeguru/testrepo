@@ -47,16 +47,17 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
 
 	public List<DTabs> toplist;
 	public List<DTabs> bottomlist;
+	public List<DTabs> leftlist;
 
 
-	public JTabbedPane toppane, bottompane;
-	public JSplitPane splitpane;
+	public JTabbedPane toppane, bottompane, leftpane;
+	public JSplitPane splitpane, lsplitpane;
 
 	public String name, key;
 
 	public boolean isVisible = false;
 
-	private int w, h, splitloc;
+	private int w, h, splitloc, leftsplit;
 
 	private int type, index, subkey;
 
@@ -87,7 +88,8 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
 			key = lchild.getAttribute("key", "");
 			w = Integer.valueOf(lchild.getAttribute("w")).intValue()+80;
 			h = Integer.valueOf(lchild.getAttribute("h")).intValue();
-			splitloc = Integer.valueOf(lchild.getAttribute("splitloc", "0")).intValue();
+			splitloc = Integer.valueOf(lchild.getAttribute("splitloc", "200")).intValue();
+			leftsplit = Integer.valueOf(lchild.getAttribute("leftsplit", "200")).intValue();
 
 			llchild = lchild;
 			ldb = db;
@@ -125,22 +127,44 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
 
 		toplist = new ArrayList<DTabs>();
 		bottomlist = new ArrayList<DTabs>();
+		leftlist = new ArrayList<DTabs>();
 
 		List<DElement> fchild = lchild.getElements();
 
 		toppane = new JTabbedPane(JTabbedPane.TOP);
 		bottompane = new JTabbedPane(JTabbedPane.TOP);
+		leftpane = new JTabbedPane(JTabbedPane.TOP);
 
 		if (lchild.getAttribute("splittype", "").equals("vert")) {
 			splitpane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, toppane, bottompane);
-		} else {
-			splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, toppane, bottompane);
-		}
-		splitpane.setOneTouchExpandable(true);
-		splitpane.setDividerLocation(splitloc);
+			splitpane.setOneTouchExpandable(true);
+			splitpane.setDividerLocation(splitloc);
+			// Add the split pane to the main container.
+			add(splitpane);
 
-		// Add the split pane to the main container.
-		add(splitpane);
+			}
+		else if(lchild.getAttribute("splittype", "").equals("horl")){
+			splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, toppane, bottompane);
+			splitpane.setOneTouchExpandable(true);
+			splitpane.setDividerLocation(splitloc);
+			// Add the split pane to the main container.
+			add(splitpane);
+
+			}
+		else if(lchild.getAttribute("splittype", "").equals("hybrid")){
+		      splitpane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, toppane, bottompane);
+		      lsplitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftpane, splitpane);
+
+		      //splitpane.setOneTouchExpandable(true);
+		      splitpane.setDividerLocation(splitloc);
+
+		      //lsplitpane.setOneTouchExpandable(true);
+		      lsplitpane.setDividerLocation(leftsplit);
+		      // Add the split pane to the main container.
+		      add(lsplitpane);
+		      }
+
+
 
 		for(DElement el : fchild) {
 			String tmpstr = el.getAttribute("key", "");
@@ -181,22 +205,27 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
 				if(el.getAttribute("pos").equals("top")) {
 					toppane.addTab(el.getAttribute("name"), icon, grids.get(grids.size()-1).panel);
 					toplist.add(new DTabs(2, grids.size()-1, fkey));
-				} else {
+					}
+				else if(el.getAttribute("pos").equals("bottom")){
 					bottompane.addTab(el.getAttribute("name"), icon, grids.get(grids.size()-1).panel);
 					bottomlist.add(new DTabs(2, grids.size()-1, fkey));
-				}
+					}
+				else if(el.getAttribute("pos").equals("left")){
+					leftpane.addTab(el.getAttribute("name"), icon, grids.get(grids.size()-1).panel);
+					leftlist.add(new DTabs(2, grids.size()-1, fkey));
+					}
 			}
 			else if(el.getName().equals("FILTER")) {
 				ImageIcon icon = createImageIcon("images/binoculars.jpeg");
-   	        	filters.add(new DFilter(el, db));
-   	            if(el.getAttribute("pos").equals("top")) {
-   	            	toppane.addTab(el.getAttribute("name"), icon, filters.get(filters.size()-1).panel);
-   	                toplist.add(new DTabs(3, filters.size()-1, fkey));
+				filters.add(new DFilter(el, db));
+				if(el.getAttribute("pos").equals("top")) {
+					toppane.addTab(el.getAttribute("name"), icon, filters.get(filters.size()-1).panel);
+					toplist.add(new DTabs(3, filters.size()-1, fkey));
 					}
 				else {
-   	            	bottompane.addTab(el.getAttribute("name"), icon, filters.get(filters.size()-1).panel);
-   	                bottomlist.add(new DTabs(3, filters.size()-1, fkey));
-					}
+				      bottompane.addTab(el.getAttribute("name"), icon, filters.get(filters.size()-1).panel);
+				      bottomlist.add(new DTabs(3, filters.size()-1, fkey));
+				      }
 				}
 			else if(el.getName().equals("SEARCH")) {
 
@@ -264,6 +293,7 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
 		// add mouse listner for tab selections
 		toppane.addMouseListener(this);
 		bottompane.addMouseListener(this);
+		leftpane.addMouseListener(this);
 
 		// add the grid click action listener (for all grids)
 		for(DGrid grid : grids) grid.table.addMouseListener(this);
@@ -315,26 +345,44 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
         super.setSize(w, h);
  	}
 
-	public void setItem(boolean istop) {
-		if(toppane.getSelectedIndex()<0) istop=false;
-		if(bottompane.getSelectedIndex()<0) istop=true;
+	//here
+	public void setItem(String pos) {
+		//if(toppane.getSelectedIndex()<0) istop=false;
+		//if(bottompane.getSelectedIndex()<0) istop=true;
 
-		for(int i=0; i<toppane.getTabCount(); i++) toppane.setForegroundAt(i, Color.BLACK);
-		for(int i=0; i<bottompane.getTabCount(); i++) bottompane.setForegroundAt(i, Color.BLACK);
 
-		if(istop) {
+		if(bottompane.getSelectedIndex()<0) pos="istop";
+		if(toppane.getSelectedIndex()<0) pos="isbottom";
+
+
+
+		for(int i=0; i<toppane.getTabCount(); i++)
+		    toppane.setForegroundAt(i, Color.BLACK);
+		for(int i=0; i<bottompane.getTabCount(); i++)
+		    bottompane.setForegroundAt(i, Color.BLACK);
+		for(int i=0; i<leftpane.getTabCount(); i++)
+		    leftpane.setForegroundAt(i, Color.BLACK);
+
+		if(pos.equals("isleft")) {
+			type = leftlist.get(leftpane.getSelectedIndex()).type;
+			index = leftlist.get(leftpane.getSelectedIndex()).index;
+			subkey = leftlist.get(leftpane.getSelectedIndex()).key;
+			leftpane.setForegroundAt(leftpane.getSelectedIndex(), Color.BLUE);
+			}
+		else if(pos.equals("istop")) {
 			type = toplist.get(toppane.getSelectedIndex()).type;
 			index = toplist.get(toppane.getSelectedIndex()).index;
 			subkey = toplist.get(toppane.getSelectedIndex()).key;
 			toppane.setForegroundAt(toppane.getSelectedIndex(), Color.BLUE);
-		} else {
+			}
+		else if(pos.equals("isbottom")) {
 			type = bottomlist.get(bottompane.getSelectedIndex()).type;
 			index = bottomlist.get(bottompane.getSelectedIndex()).index;
 			subkey = bottomlist.get(bottompane.getSelectedIndex()).key;
 			bottompane.setForegroundAt(bottompane.getSelectedIndex(), Color.BLUE);
-		}
+			}
 
-		// System.out.println("Type = " + type + " index = " + index + " key = " + subkey + " is top = " + istop);
+		System.out.println("Type = " + type + " index = " + index + " key = " + subkey + " pos = " + pos);
 	}
 
  	public void setVisible(boolean visible) {
@@ -480,27 +528,38 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
 		//	}
 
 		if(e.getComponent().equals(toppane)){
-			setItem(true);
+			//setItem(true);
+			setItem("istop");
 			}
 		else if(e.getComponent().equals(bottompane)) {
-			setItem(false);
+			//setItem(false);
+			setItem("isbottom");
+			}
+		else if(e.getComponent().equals(leftpane)) {
+			setItem("isleft");
 			}
 		else {
 			if(e.getComponent().getParent().getParent().getParent().getParent().equals(toppane)) {
-				setItem(true);
+				setItem("istop");
 				}
 			else if(e.getComponent().getParent().getParent().getParent().getParent().equals(bottompane)) {
-				setItem(false);
+				setItem("isbottom");
+				}
+			else if(e.getComponent().getParent().getParent().getParent().getParent().equals(leftpane)) {
+				setItem("isleft");
 				}
 			else if(e.getComponent().getParent().equals(toppane)) {
-            	setItem(true);
+				setItem("istop");
 				}
 			else if(e.getComponent().getParent().equals(bottompane)) {
-				setItem(false);
+				setItem("isbottom");
+				}
+			else if(e.getComponent().getParent().equals(leftpane)) {
+				setItem("isleft");
 				}
 			}
 
-		if(type==2) {		//grid selection
+		if(type==2) {		//after grid selection
 			String keyvalue = grids.get(index).getKey();
 
 			System.out.println("DEBUG: At DContainer:mouseClicked\n\t\tkeyvalue = " + keyvalue);
@@ -513,8 +572,8 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
 				if((form.islookup) && (form.lookupkey==subkey))
 					form.lookupinput(keyvalue);
 				}
-            for(DGrid grid : grids) {
-            	if((grid.linkkey != 0) && (grid.linkkey==subkey))
+			for(DGrid grid : grids) {
+			    if((grid.linkkey != 0) && (grid.linkkey==subkey))
 					grid.makechild(keyvalue);
 				}
 			for(DAction action : actions){
@@ -591,21 +650,37 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
 	}
 
     public void focusGained(FocusEvent e) {
-        // System.out.println("Focus gained :" + e.getComponent().getParent().getParent().getName());
+		//System.out.println("Focus gained :" + e.getComponent().getParent().getParent().getName());
 		if(e.getComponent().getParent().getParent().equals(toppane)) {
-			setItem(true);
-		} else if(e.getComponent().getParent().getParent().equals(bottompane)) {
-			setItem(false);
-		} else if(e.getComponent().getParent().getParent().getParent().equals(toppane)) {
-			setItem(true);
-		} else if(e.getComponent().getParent().getParent().getParent().equals(bottompane)) {
-			setItem(false);
-		}  else if(e.getComponent().getParent().getParent().getParent().getParent().equals(toppane)) {
-			setItem(true);
-		} else if(e.getComponent().getParent().getParent().getParent().getParent().equals(bottompane)) {
-			setItem(false);
-		}
-    }
+			setItem("istop");
+			}
+		else if(e.getComponent().getParent().getParent().equals(bottompane)) {
+			setItem("isbottom");
+			}
+		else if(e.getComponent().getParent().getParent().equals(leftpane)) {
+			setItem("isleft");
+			}
+
+		else if(e.getComponent().getParent().getParent().getParent().equals(toppane)) {
+			setItem("istop");
+			}
+		else if(e.getComponent().getParent().getParent().getParent().equals(bottompane)) {
+			setItem("isbottom");
+			}
+		else if(e.getComponent().getParent().getParent().getParent().equals(leftpane)) {
+			setItem("isleft");
+			}
+
+		else if(e.getComponent().getParent().getParent().getParent().getParent().equals(toppane)) {
+			setItem("istop");
+			}
+		else if(e.getComponent().getParent().getParent().getParent().getParent().equals(bottompane)) {
+			setItem("isbottom");
+			}
+		else if(e.getComponent().getParent().getParent().getParent().getParent().equals(leftpane)) {
+			setItem("isleft");
+			}
+	}
 
     public void focusLost(FocusEvent e) { }
 

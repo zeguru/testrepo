@@ -67,7 +67,8 @@ public class DImport implements ActionListener {
 		combolist =  new HashMap<Integer, DGridCombo>();
 
 		importmodel = new DImportModel(fielddef);
-		tabledef = new DTableDef(fielddef, db, combolist);
+		tabledef = new DTableDef(fielddef, db, combolist, toppanel);
+		//tabledef = new DTableDef(fielddef, db, combolist);
 
 		datatable = new JTable(tabledef);	//db
 		importtable = new JTable(importmodel);	//xl
@@ -179,7 +180,7 @@ public class DImport implements ActionListener {
 			}
 		catch(Exception ex){
 			JOptionPane.showMessageDialog(toppanel, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
-        	System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLException: " + ex.getMessage());
 			}
     }
 

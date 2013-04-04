@@ -121,7 +121,8 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 		rowheight = fielddef.getAttribute("rowheight");
 		bgurl = fielddef.getAttribute("bgurl");
 
-		tabledef = new DTableDef(fielddef, db, combolist);
+		//tabledef = new DTableDef(fielddef, db, combolist);
+		tabledef = new DTableDef(fielddef, db, combolist, panel);
 		sorter = new TableRowSorter<DTableDef>(tabledef);
 		table = new JTable(tabledef);
 
@@ -266,6 +267,8 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 		else if(gridfilter.equals("bottom"))
 			panel.add(filterpanel, BorderLayout.PAGE_END);
 
+
+		//JOptionPane.showMessageDialog(panel,"Info line 1" + "\n" + "line 2","Test", JOptionPane.INFORMATION_MESSAGE);
 		panel.add(tableview, BorderLayout.CENTER);
 
 		JTableHeader th = table.getTableHeader();
@@ -281,6 +284,7 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 
 	public DGrid(Connection ldb) {
 		filtername = "filterid";
+
 
 		System.out.println("DEBUG: at constructor DGrid(Connection)");
 
