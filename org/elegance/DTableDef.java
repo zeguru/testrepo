@@ -8,10 +8,10 @@ import java.util.Vector;
 
 import java.util.Map;
 import java.util.HashMap;
-
 import javax.swing.table.AbstractTableModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.Icon;
 
 import java.io.StringWriter;
@@ -19,6 +19,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class DTableDef extends AbstractTableModel {
+
+	JPanel parentPanel;
 
 	List<String> columnTitle;
 	public List<String> columnName;
@@ -64,17 +66,19 @@ public class DTableDef extends AbstractTableModel {
 
         // create a record set
 		mydb = db;
-        try {
-        	st = db.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-      	} catch(SQLException ex) {
-        	System.out.println("Grid Data Create SQLException : " + ex.getMessage());
-        }
+		try {
+			st = db.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			}
+		catch(SQLException ex) {
+			System.out.println("Grid Data Create SQLException : " + ex.getMessage());
+		}
 	}
 
-	public DTableDef(DElement fielddef, Connection db, Map<Integer, DGridCombo> combolist) {
+	public DTableDef(DElement fielddef, Connection db, Map<Integer, DGridCombo> combolist, JPanel p) {
 
 		children = new ArrayList<DElement>(fielddef.getElements());
 		this.combolist = combolist;
+		this.parentPanel = p;
 
 		columnName = new ArrayList<String>();
 		columnTitle = new ArrayList<String>();
@@ -152,7 +156,7 @@ public class DTableDef extends AbstractTableModel {
 
         // create a record set
 		mydb = db;
-        try {
+		try {
 			upst = db.createStatement();
         	st = db.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = st.executeQuery(newsql);
@@ -165,9 +169,10 @@ public class DTableDef extends AbstractTableModel {
 			}
 		catch(SQLException ex) {
 			//JOptionPane.showMessageDialog(this, "Title......." + "\n" + "33","Info", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(parentPanel, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
 			System.out.println("Grid Data Create SQLException : " + ex.getMessage());
 			}
-		}
+	}
 
 	public void filter(String where) {
 		String oldsql = sql;
@@ -220,6 +225,7 @@ public class DTableDef extends AbstractTableModel {
 				}
 			}
 		catch(SQLException ex) {
+		  JOptionPane.showMessageDialog(parentPanel, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
        		 System.out.println("Grid Query Creation SQLException : " + ex.getMessage());
 			}
 
@@ -250,6 +256,7 @@ public class DTableDef extends AbstractTableModel {
                 	rows.addElement(newRow);
 	      		}
   		} catch(SQLException ex) {
+			JOptionPane.showMessageDialog(parentPanel, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
        		 	System.out.println("Grid Refresh SQLException : " + ex.getMessage());
      		}
 
@@ -322,8 +329,8 @@ public class DTableDef extends AbstractTableModel {
         return row.elementAt(aColumn);
     }
 
-	// To edit a value on a table
-	public void setValueAt(Object value, int row, int column) {
+    // To edit a value on a table
+    public void setValueAt(Object value, int row, int column) {
 		System.out.println("Row = " + row + " Col = " + column + " Key List = " + keylist.get(row) + " Value = " + value);
 		String mystr = "";
 
@@ -492,8 +499,11 @@ public class DTableDef extends AbstractTableModel {
 			upst.executeUpdate(mystr);
 
 		} catch (SQLException ex) {
-        	System.out.println("The SQL Exeption on : " + ex);
-        }
+			//JOptionPane.showMessageDialog(, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
+			//System.out.println("PARENT = " + this);
+			JOptionPane.showMessageDialog(parentPanel, ex.getMessage(), "Update Error", JOptionPane.ERROR_MESSAGE);
+			System.out.println("GRID SQL Exeption : " + ex);
+			}
 
 		Vector dataRow = (Vector)rows.elementAt(row);
 		dataRow.setElementAt(value, column);
@@ -543,7 +553,8 @@ public class DTableDef extends AbstractTableModel {
 				//recAudit("Insert", rs.getString(primarykey), "");
 			}
  		} catch (SQLException ex) {
-         	System.out.println("Import Error : " + ex);
+			JOptionPane.showMessageDialog(parentPanel, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
+			System.out.println("Import Error : " + ex);
 			//JOptionPane.showMessageDialog(panel, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
         }
 
@@ -666,4 +677,7 @@ public class DTableDef extends AbstractTableModel {
 		return mystr;
     }
 
+//    public String setParentPanel(JPanel p){
+// 	this.parentPanel = p;
+// 	}
 }

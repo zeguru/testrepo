@@ -4,24 +4,39 @@
 
 cd $(dirname $0)
 
-CLASSPATH=".:../../build/lib/jasperreports-3.6.0.jar:../../build/lib/mail.jar:../../build/lib/poi-3.2-FINAL-20081019.jar:../../build/lib/quaqua.jar:../../build/lib/oalnf.jar:../../build/lib/jl1.0.jar:../../build/lib/mysql-connector-java-5.1.13-bin.jar:../../build/lib/lucene-core-2.4.1.jar:../../build/lib/jtunestable.jar:"
-#CLASSPATH=".:../../build/lib/mysql-connector-java-5.1.13-bin.jar:"
-#CLASSPATH=".:../../build/lib/jasperreports-3.7.4.jar:../../build/lib/mail.jar:../../build/lib/poi-3.2-FINAL-20081019.jar:../../build/lib/quaqua.jar:../../build/lib/oalnf.jar:../../build/lib/jl1.0.jar:../../build/lib/lucene-core-2.4.1.jar:"
+CLASSPATH=".:/usr/sesame/build/lib/jasperreports-3.6.0.jar:/usr/sesame/build/lib/mail.jar:/usr/sesame/build/lib/poi-3.2-FINAL-20081019.jar:/usr/sesame/build/lib/quaqua.jar:/usr/sesame/build/lib/oalnf.jar:/usr/sesame/build/lib/jl1.0.jar:/usr/sesame/build/lib/mysql-connector-java-5.1.13-bin.jar:/usr/sesame/build/lib/lucene-core-2.4.1.jar:/usr/sesame/build/lib/jtunestable.jar:"
+#CLASSPATH=".:/usr/sesame/build/lib/mysql-connector-java-5.1.13-bin.jar:"
+#CLASSPATH=".:/usr/sesame/build/lib/jasperreports-3.7.4.jar:/usr/sesame/build/lib/mail.jar:/usr/sesame/build/lib/poi-3.2-FINAL-20081019.jar:/usr/sesame/build/lib/quaqua.jar:/usr/sesame/build/lib/oalnf.jar:/usr/sesame/build/lib/jl1.0.jar:/usr/sesame/build/lib/lucene-core-2.4.1.jar:"
 javac -classpath $CLASSPATH org/elegance/*.java
 /usr/java/jdk1.6.0_26/bin/jar cmf libmanifest sesame.lib.jar org/elegance/*.class org/elegance/images
 
-CLASSPATH=".:sesame.lib.jar:../../build/lib/liquidlnf.jar:../../build/lib/looks-2.2.2.jar:../../build/lib/oalnf.jar:../../build/lib/quaqua.jar:../../build/lib/jtunestable.jar:"
+CLASSPATH=".:sesame.lib.jar:/usr/sesame/build/lib/liquidlnf.jar:/usr/sesame/build/lib/looks-2.2.2.jar:/usr/sesame/build/lib/oalnf.jar:/usr/sesame/build/lib/quaqua.jar:/usr/sesame/build/lib/jtunestable.jar:"
 javac -classpath $CLASSPATH *.java
 /usr/java/jdk1.6.0_26/bin/jar cmf manifest sesame.jar sesame.class
 
-/usr/java/jdk1.6.0_26/bin/jarsigner -keystore ../../build/lib/SesameSign sesame.lib.jar SesameSign
-/usr/java/jdk1.6.0_26/bin/jarsigner -keystore ../../build/lib/SesameSign sesame.jar SesameSign
+/usr/java/jdk1.6.0_26/bin/jarsigner -keystore /usr/sesame/build/lib/SesameSign sesame.lib.jar SesameSign
+/usr/java/jdk1.6.0_26/bin/jarsigner -keystore /usr/sesame/build/lib/SesameSign sesame.jar SesameSign
 
 #immutable flag
-chattr +i ../../systems/runtime.xml
+chattr +i /usr/sesame/systems/runtime.xml
 
-mv sesame.lib.jar ../../build/sesame.lib.jar -f
-mv sesame.jar ../../build/sesame.jar -f
+mv sesame.lib.jar /usr/sesame/build/sesame.lib.jar -f
+mv sesame.jar /usr/sesame/build/sesame.jar -f
+
+
+#testing here
+#svn info
+#svn status
+#svn list
+#echo -n "Type Message and press [ENTER]: "
+#read var_message
+#echo "Your commit message is: $var_message"
+#echo -n "Press [ENTER] to continue,...: "
+#read var_message
+#echo "You can go on!...."
+
 
 #COMMIT
-svn commit -m
+export SVN_EDITOR=kwrite
+#svn commit -m $var_message
+svn commit
