@@ -20,6 +20,9 @@ javac -classpath $CLASSPATH *.java
 #immutable flag
 chattr +i /usr/sesame/systems/runtime.xml
 
+cp sesame.lib.jar /var/www/html/websms/launchpad/lib/ -f
+cp sesame.jar /var/www/html/websms/launchpad/lib/ -f
+
 mv sesame.lib.jar /usr/sesame/build/sesame.lib.jar -f
 mv sesame.jar /usr/sesame/build/sesame.jar -f
 
