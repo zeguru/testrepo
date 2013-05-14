@@ -154,6 +154,10 @@ public class DTableDef extends AbstractTableModel {
 			    }
 		    }
 
+		//if(!user.equals("")){	//if only user related data is needed
+		//    }
+		System.out.println("NEWSQL = " + newsql);
+
         // create a record set
 		mydb = db;
 		try {

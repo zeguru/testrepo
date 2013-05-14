@@ -54,6 +54,7 @@ public class DLogin implements ActionListener {
 	private static String loggedin;
 	private static String currentUserId;		//currently logged in user
 	public static String databasetype;
+	public static String dbprefix;			//support for multitenancy (single DB multiple apps)
 	static String application_dictionary;
 	static String logindesk;
 	static String loginsql;;
@@ -63,17 +64,9 @@ public class DLogin implements ActionListener {
 
 
 	public DLogin(String ldir, String xmlfile) {
-		// Open the XML File and read the program list
+		// Open the runtime.XML File and read the program list
 		DXML dxml = new DXML(ldir + xmlfile);
 		DElement root = dxml.getRoot().getFirst();
-
-
-		if(root.getAttribute("databasetype")==null)
-			databasetype = "postgres";
-		else
-			databasetype = root.getAttribute("databasetype");
-
-		System.out.println("DATABASE TYPE = " + databasetype);
 
 		// This is the image used in the Login Window. Its not visible/apparent because we have super.setOpaque(true) in DImagePanel
 		img = createBufferImage("images/logo.jpg");
@@ -175,9 +168,19 @@ public class DLogin implements ActionListener {
 			String dbpasswd = prog.getAttribute("dbpasswd");
 			String authserver = prog.getAttribute("authserver","localhost");
 			String authtable = prog.getAttribute("authtable","users");  //AUth table must have at least the following: role column = rolename, user column = username, cred column=userpassword
+			String org = prog.getAttribute("org","");	//example org="client_id:1"	where client_id = 1
 
+			dbprefix = prog.getAttribute("dbprefix","");
 			logindesk = prog.getAttribute("logindesk","");
 			loginsql = prog.getAttribute("loginsql","");
+
+			if(prog.getAttribute("databasetype")==null)
+				databasetype = "postgres";
+			else
+				databasetype = prog.getAttribute("databasetype");
+
+			System.out.println("DATABASE TYPE = " + databasetype);
+
 
 			String password = new String(txtpassword.getPassword());
 
@@ -196,7 +199,6 @@ public class DLogin implements ActionListener {
 			if(dbpasswd != null)
 				password = dbpasswd;
 
-			//System.out.println("Password = " + password);
 
 			if(dbauth) {
 				sysclear = DBconnect(prog.getAttribute("dbclass"), prog.getAttribute("dbpath"), dbuser, password, prog.getAttribute("schema"), dir + prog.getAttribute("xmlfile"));
@@ -211,7 +213,7 @@ public class DLogin implements ActionListener {
 
 				//Now authenticate using the users table
 				//and get roles
-				String userrole = getRole(txtuser.getText(), txtpassword.getText());
+				String userrole = getRole(txtuser.getText(), txtpassword.getText(), org);
 				//System.out.println("FOUND USER ROLE = " + userrole);
 				if (userrole != null){
 				      build = new DBuild(xmlfile, db, reportpath, userrole);
@@ -265,13 +267,13 @@ public class DLogin implements ActionListener {
 				String databasetype = root.getAttribute("databasetype","postgres");
 				if(databasetype.equals("postgres")){
 				      //check expiry info
-				      sql = "SELECT application_name,application_verson,expiry_date,eol_md5 FROM " + application_dictionary + "";
+				      sql = "SELECT application_name,application_verson,expiry_date,eol_md5 FROM " + (dbprefix.equals("")?"":dbprefix) + application_dictionary + "";
 				      sql += " WHERE md5(to_char(expiry_date,'YYYY-Mon-DD')) = eol_md5 ";	//make sure the expiry date was not changed
 				      sql += " AND (expiry_date >= current_date)";
 				      sql += " ORDER BY " + application_dictionary + "_id LIMIT 1";
 				      }
 				else if(databasetype.equals("mysql")){
-				      sql = "SELECT application_name,application_verson,expiry_date,eol_md5 FROM " + application_dictionary + "";
+				      sql = "SELECT application_name,application_verson,expiry_date,eol_md5 FROM " + (dbprefix.equals("")?"":dbprefix) + application_dictionary + "";
 				      sql += " WHERE md5(expiry_date) = eol_md5 ";	//make sure the expiry date was not changed
 				      sql += " AND (expiry_date >= current_date)";
 				      sql += " ORDER BY " + application_dictionary + "_id LIMIT 1";
@@ -285,7 +287,7 @@ public class DLogin implements ActionListener {
 				  //then confirm the app name has not been changed in the XML
 				  db_app_name = rs.getString("application_name");
 				  if(!db_app_name.equals(xml_app_name)){
-					System.out.println("APP NAME was changed or System EOL reached");
+					System.out.println("EOL");	//APP NAME was changed or System EOL reached
 					connected = false;
 					}
 
@@ -295,10 +297,12 @@ public class DLogin implements ActionListener {
 		catch (ClassNotFoundException ex) {
 			System.err.println("Could not find the database driver classes.");
 			System.err.println(ex);
+			connected = false;
 			}
 		catch (SQLException ex) {
 			System.err.println("Cannot connect to this database.");
 			System.err.println(ex);
+			connected = false;
 			}
 
 		return connected;
@@ -348,27 +352,37 @@ public class DLogin implements ActionListener {
 
 
 
-  public String getRole(String user, String pwd){
+  public String getRole(String user, String pwd, String g){
 	String role = null;
 	String fullname = null;
 	try {
 	    // check for super user privillages
 	    String sql;
-	    if(application_dictionary == null){ //OLD SYSTEM - before 2013
+	    if(application_dictionary == null){ //backward compatibility OLD SYSTEM - before 2013
 		if (user.equals("root") && pwd.equals(""))
-		    sql = "SELECT userid as user_id, superuser, rolename, fullname FROM users WHERE UPPER(username) = UPPER('" + user + "')";
+		    sql = "SELECT userid as user_id, superuser, rolename, fullname FROM " + (dbprefix.equals("")?"":dbprefix) + "users WHERE UPPER(username) = UPPER('" + user + "')";
 		else
-		    sql = "SELECT userid as user_id, superuser, rolename, fullname FROM users WHERE UPPER(username) = UPPER('" + user + "') AND userpasswd = MD5('" + pwd + "')";
+		    sql = "SELECT userid as user_id, superuser, rolename, fullname FROM " + (dbprefix.equals("")?"":dbprefix) + "users WHERE UPPER(username) = UPPER('" + user + "') AND userpasswd = MD5('" + pwd + "')";
 		}
-	    else
-	      sql = "SELECT user_id, is_super_user as superuser, role_name as rolename, full_name as fullname FROM users WHERE UPPER(user_name) = UPPER('" + user + "') AND user_passwd = MD5('" + pwd + "')";
+	    else{
+		sql = "SELECT user_id, is_super_user as superuser, role_name as rolename, full_name as fullname FROM " + (dbprefix.equals("")?"":dbprefix) + "users WHERE UPPER(user_name) = UPPER('" + user + "') AND user_passwd = MD5('" + pwd + "')";
+		}
 
-	    //System.out.println("ROLE sql = " + sql);
+	    if(!g.equals("")){
+		sql += " AND " + g;
+		}
+
+	    //System.out.println("ROLE SQL = " + sql);
 
 	    Statement stmt = db.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 	    ResultSet rs = stmt.executeQuery(sql);
 
-	    rs.absolute(0);
+	    if(databasetype.equals("mysql"))
+		System.out.println("getting role");
+		//rs.absolute(1);
+		//rs.first();
+	    else
+		rs.absolute(0);
 
 	    if(rs.next()) {
 		//role check
