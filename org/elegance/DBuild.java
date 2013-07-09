@@ -411,8 +411,9 @@ public class DBuild implements TreeSelectionListener, ActionListener, Runnable, 
 			System.exit(0);
 			}
 		if(cmd.compareToIgnoreCase("Logout")==0) {
-			System.out.println("Logging out");
+			//System.out.println("Logging out");
 			//container.get()
+			DLogin.logOut();
 			}
 
 

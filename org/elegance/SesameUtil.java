@@ -2,7 +2,7 @@ package org.elegance;
 
 import java.awt.image.BufferedImage;
 
-import java.io.*; 
+import java.io.*;
 import javax.imageio.ImageIO;
 
 public class SesameUtil {
@@ -11,7 +11,7 @@ public class SesameUtil {
 
 		java.net.URL imgURL = DContainer.class.getResource(path);
 
-        if (imgURL != null) {
+		if (imgURL != null) {
 			try {
 				return ImageIO.read(imgURL);
 				}
@@ -20,7 +20,13 @@ public class SesameUtil {
 				}
 			}
 		else {
-            System.err.println("Couldn't find file: " + path);
+			try{
+			    imgURL = DContainer.class.getResource("images/clientlogo.jpg");
+			    return ImageIO.read(imgURL);
+			    }
+			catch(IOException ex){
+			    System.err.println("Couldn't find file: " + path);
+			    }
 			}
 
 		return null;

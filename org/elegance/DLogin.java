@@ -33,14 +33,15 @@ public class DLogin implements ActionListener {
 	public JTextField txtuser;
 	public JPasswordField txtpassword;
 	public JButton btnok, btnclear;
-	public DImagePanel mainpanel;
-	public JPanel panel, loginpanel;
+	public static DImagePanel mainpanel;
+	public static JPanel panel;
+	public JPanel loginpanel;
 	public JPanel [] p;
 	private JLabel[] l;
 
 	public List<DElement> programs;
 
-	public DBuild build;
+	public static DBuild build;
 	public DMail mail;
 	BufferedImage img;
 
@@ -264,9 +265,10 @@ public class DLogin implements ActionListener {
 			if(application_dictionary != null){
 
 				String sql = "";
-				String databasetype = root.getAttribute("databasetype","postgres");
+
+				//check expiry info
 				if(databasetype.equals("postgres")){
-				      //check expiry info
+
 				      sql = "SELECT application_name,application_verson,expiry_date,eol_md5 FROM " + (dbprefix.equals("")?"":dbprefix) + application_dictionary + "";
 				      sql += " WHERE md5(to_char(expiry_date,'YYYY-Mon-DD')) = eol_md5 ";	//make sure the expiry date was not changed
 				      sql += " AND (expiry_date >= current_date)";
@@ -282,14 +284,19 @@ public class DLogin implements ActionListener {
 				  //System.out.println("APPLICATION dictionary sql = " + sql);
 				  Statement stmt = db.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				  ResultSet rs = stmt.executeQuery(sql);
-				  rs.next();
 
-				  //then confirm the app name has not been changed in the XML
-				  db_app_name = rs.getString("application_name");
-				  if(!db_app_name.equals(xml_app_name)){
-					System.out.println("EOL");	//APP NAME was changed or System EOL reached
+				  if(rs.next()){
+				    //then confirm the app name has not been changed in the XML
+				    db_app_name = rs.getString("application_name");
+				    if(!db_app_name.equals(xml_app_name)){
+					  System.out.println("EOL");	//APP NAME was changed
+					  connected = false;
+					  }
+				    }
+				  else{
+					System.out.println("EOL");	//System EOL reached
 					connected = false;
-					}
+				      }
 
 				}
 
@@ -301,7 +308,7 @@ public class DLogin implements ActionListener {
 			}
 		catch (SQLException ex) {
 			System.err.println("Cannot connect to this database.");
-			System.err.println(ex);
+			System.err.println(ex.getMessage());
 			connected = false;
 			}
 
@@ -379,10 +386,10 @@ public class DLogin implements ActionListener {
 
 	    if(databasetype.equals("mysql"))
 		System.out.println("getting role");
-		//rs.absolute(1);
-		//rs.first();
-	    else
+	    else if(databasetype.equals("postgres"))
 		rs.absolute(0);
+		//System.out.println("getting role");
+
 
 	    if(rs.next()) {
 		//role check
@@ -399,7 +406,7 @@ public class DLogin implements ActionListener {
 
 		}
 
-	    System.out.println("ROLE here = " + role);
+	    //System.out.println("ROLE here = " + role);
 
 	    loggedin = fullname;
 
@@ -416,7 +423,12 @@ public class DLogin implements ActionListener {
 	}
 
 
-
+    public static void logOut(){
+	  System.out.println("at DLogin Logging Out..");
+	  mainpanel.remove(build.mainpanel);
+	  mainpanel.add(panel);
+	  panel.setVisible(true);
+	}
     public static String getLoggedInUser(){
 	    return loggedin;
 	  }

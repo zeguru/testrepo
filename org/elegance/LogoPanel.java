@@ -4,13 +4,13 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 
-import java.io.*; 
+import java.io.*;
 import javax.imageio.ImageIO;
 
 public class LogoPanel extends JPanel {
 
 	private BufferedImage img;
-    
+
     public LogoPanel(String path){
 
 		setPreferredSize(new Dimension(100, 250));
@@ -22,13 +22,15 @@ public class LogoPanel extends JPanel {
 			//else
 			//	img = SesameUtil.createBufferImage("images/sailing.jpg");
 
+			//getClass().getResource("images/gif/calendar.gif")
+
 			img = SesameUtil.createBufferImage(path);
 			}
 		catch(Exception e){
 			System.out.println("Unable to load company logo");
-			System.out.println("Error: " + e.getMessage());			
+			System.out.println("Error: " + e.getMessage());
 			}
-			
+
 		}
 
     public void paintComponent(Graphics g)  {
