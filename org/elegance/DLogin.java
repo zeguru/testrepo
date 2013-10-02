@@ -222,7 +222,10 @@ public class DLogin implements ActionListener {
 				      panel.setVisible(false);
 				      mainpanel.remove(panel);
 				      mainpanel.add(build.mainpanel);
+
+				      //clear
 				      txtpassword.setText("");
+				      txtuser.setText("");
 				      }
 				else{		//user with matching username and password
 				    lblmessage.setText("Incorrect Username/Password. Please try again.");
