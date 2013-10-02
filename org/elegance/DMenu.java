@@ -62,6 +62,9 @@ public class DMenu {
 		menuitem[5] = new JMenuItem("Logout");
 		menuitem[6] = new JMenuItem("Exit");
 
+		menuitem[3].setEnabled(false);
+		menuitem[4].setEnabled(false);
+
 		for(int j=3;j<7;j++) {
 			filemenu.add(menuitem[j]);
 			if(j==5) filemenu.addSeparator();

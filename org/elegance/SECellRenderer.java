@@ -16,26 +16,26 @@ public class SECellRenderer extends JLabel implements TreeCellRenderer {
 
 	public SECellRenderer() {
 
-		setOpaque(false);		
-		
-		//setBackground(Color.RED);		
-	
-		//setIcon(new ImageIcon("/usr/sesame/build/images/gif/alarm-16.gif"));	
-		//renderer.setLeafIcon(new ImageIcon("/usr/sesame/build/images/gif/alarm-16.gif"));		
+		setOpaque(false);
+
+		//setBackground(Color.RED);
+
+		//setIcon(new ImageIcon("/usr/sesame/build/images/gif/alarm-16.gif"));
+		//renderer.setLeafIcon(new ImageIcon("/usr/sesame/build/images/gif/alarm-16.gif"));
 		//renderer.setClosedIcon(new ImageIcon("/usr/sesame/build/images/gif/alarm-16.gif"));
 		//renderer.setOpenIcon(new ImageIcon("/usr/sesame/build/images/gif/alarm-16.gif"));
 
-		//renderer.setFont();	
+		//renderer.setFont();
 		//setTextSelectionColor(Color.GRAY);
 		//setTextNonSelectionColor(Color.RED);
 
 		}
 
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-		
-		
+
+
 		String stringValue = tree.convertValueToText(value, sel, expanded, leaf, row, hasFocus);
-	
+
 		setEnabled(tree.isEnabled());
 		setText(stringValue);
 
@@ -44,24 +44,26 @@ public class SECellRenderer extends JLabel implements TreeCellRenderer {
 
 		//custom renderer
 		if (leaf) {
-		    			
+
 			if (hasFocus){
 				setForeground(Color.red);
 				//setBackground(Color.yellow);
-				setIcon(new ImageIcon("/usr/sesame/build/images/gif/calendar.gif"));	
-				} 
-			else{ 
+				//setIcon(new ImageIcon("/usr/sesame/build/images/gif/calendar.gif"));
+				setIcon(new ImageIcon(getClass().getResource("images/gif/calendar.gif")));
+
+				}
+			else{
 				setForeground(Color.blue);
 				//setBackground(Color.white);
-				setIcon(UIManager.getIcon("Tree.leafIcon"));			
+				setIcon(UIManager.getIcon("Tree.leafIcon"));
 				}
 
-			} 		
+			}
 		else if (expanded) {
 			setForeground(Color.orange);
 			//setBackground(Color.blue);
 		    setIcon(UIManager.getIcon("Tree.openIcon"));
-			} 
+			}
 		else {
 			setForeground(Color.white);
 			//setBackground(Color.blue);

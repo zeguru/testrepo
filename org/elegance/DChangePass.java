@@ -82,6 +82,8 @@ public class DChangePass extends JInternalFrame implements ActionListener {
 		String confpassword = new String(confpass.getPassword());
 
 		// Execute the procedure
+		//System.out.println("NEW = " + newpassword + ", CONF = " + confpassword);
+
 		if (!newpassword.equals(confpassword)) {
 		      JOptionPane.showMessageDialog(panel, "New password does not match with confirmed password.", "password Change Error", JOptionPane.ERROR_MESSAGE);
 		      }
@@ -91,18 +93,23 @@ public class DChangePass extends JInternalFrame implements ActionListener {
 		else {
 		      try {
 
-				String username = DLogin.getLoggedInUser();
+				//String username = DLogin.getLoggedInUser();
+				String uid = DLogin.getCurrentUserId();
 
-				String mystr = "SELECT updatePassword ('" +  username + "', '" + oldpassword + "', '" + newpassword + "');";
+
+				String mystr = "SELECT updatePassword ('" +  uid + "', '" + oldpassword + "', '" + newpassword + "');";
+				//System.out.println(mystr);
 				Statement cs = conn.createStatement();
 				ResultSet rs = cs.executeQuery(mystr);
 				rs.next();
 				String result = rs.getString(1);
 
-				if (result == null) {
+				JOptionPane.showMessageDialog(panel, result, "User Update", JOptionPane.ERROR_MESSAGE);
+
+				//if (result == null) {
 				     //JOptionPane.showMessageDialog(panel, "Your old password does not match.", "Confirm Old password", JOptionPane.ERROR_MESSAGE);
-				    JOptionPane.showMessageDialog(panel, "Could not update your password. Try again", "System Error", JOptionPane.ERROR_MESSAGE);
-				} else {
+				//    JOptionPane.showMessageDialog(panel, "Could not update your password. Try again", "System Error", JOptionPane.ERROR_MESSAGE);
+				//} else {
 				/*	mystr = "ALTER ROLE " + username + " WITH PASSWORD '" + newpassword + "';";
 					System.out.println(mystr);
 					Statement stps = conn.createStatement();
@@ -111,11 +118,12 @@ public class DChangePass extends JInternalFrame implements ActionListener {
 					rs.close();
 					cs.close();
 				*/
-					JOptionPane.showMessageDialog(panel, "Password Changed Successfully", "password Changed", JOptionPane.ERROR_MESSAGE);
-				}
-			} catch(SQLException ex) {
+				//	JOptionPane.showMessageDialog(panel, "Password Changed Successfully", "password Changed", JOptionPane.ERROR_MESSAGE);
+				//}
+			}
+		    catch(SQLException ex) {
         		System.out.println("SQLException: " + ex.getMessage());
-				JOptionPane.showMessageDialog(panel, "Password Not Changed", "password Change Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(panel, "Unable to update your password", "Password Change Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}

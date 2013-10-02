@@ -17,7 +17,7 @@ public class DComboBox extends DField {
 	public JComboBox datafield;
 	public int linkkey = 0;
 	public int cmbkey = 0;
-	
+
 	private Statement st;
 	private Connection mydb;
 	private String sql;
@@ -32,13 +32,13 @@ public class DComboBox extends DField {
     public DComboBox(DElement el, JPanel lpanel, Connection db) {
 		super(el);
 
-		datafield = new JComboBox();	
+		datafield = new JComboBox();
 		lplist = new ArrayList<String>();
 
 		mydb = db;
-		
+
 		lpkey = el.getAttribute("lpkey", "");
-		if(lpkey.equals("")) 
+		if(lpkey.equals(""))
 			lpkey = name;
 
 		lptable = el.getAttribute("lptable");
@@ -59,10 +59,10 @@ public class DComboBox extends DField {
 
 		wheresql = el.getAttribute("wheresql");
 		ordersql = el.getAttribute("ordersql");
-			
+
 		datafield.setActionCommand(Integer.toString(cmbkey));
-		
-		if(title.length()>0) 
+
+		if(title.length()>0)
 			lpanel.add(label);
 
 		lpanel.add(datafield);
@@ -72,27 +72,27 @@ public class DComboBox extends DField {
 		setPos();
 
 		try {
-			if(lpkey.equals(lpfield)) 
+			if(lpkey.equals(lpfield))
 				sql = "SELECT " + lpfield + " FROM " + lptable;
-			else 
+			else
 				sql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
 
-			if(wheresql != null) 
+			if(wheresql != null)
 				sql += " WHERE " + wheresql;
-			if(ordersql != null) 
-				sql += " ORDER BY " + ordersql;  
-			else 
+			if(ordersql != null)
+				sql += " ORDER BY " + ordersql;
+			else
 				sql += " ORDER BY " + lpfield;
 
 			st = db.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			} 
+			}
 		catch(SQLException ex) {
 			System.out.println("SQLException : " + ex.getMessage());
 			JOptionPane.showMessageDialog(datafield, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
       	}
 
 		// Populate the list
-		if(!inputfield) 
+		if(!inputfield)
 			getList();
 
 		// alter if it is editable
@@ -141,16 +141,16 @@ public class DComboBox extends DField {
 		lplist.clear();
 
 		try {
-			if(lpkey.equals(lpfield)) 
+			if(lpkey.equals(lpfield))
 				sql = "SELECT " + lpfield + " FROM " + lptable;
-			else 
+			else
 				sql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
 
 			if(wheresql != null) sql += " WHERE " + wheresql + " AND " + linkfield + " = '" + wherevalue + "'";
-			else sql += " WHERE " + linkfield + " = '" + wherevalue + "'"; 
-			if(ordersql != null) sql += " ORDER BY " + ordersql;  
+			else sql += " WHERE " + linkfield + " = '" + wherevalue + "'";
+			if(ordersql != null) sql += " ORDER BY " + ordersql;
 			else sql += " ORDER BY " + lpfield;
-	
+
 			ResultSet rs = st.executeQuery(sql);
 			while(rs.next()) {
                 lplist.add(rs.getString(lpkey));
@@ -172,8 +172,8 @@ public class DComboBox extends DField {
 			else sql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
 
 			if(wheresql != null) sql += " WHERE " + wheresql + " AND " + linkfield + " ilike '%" + wherevalue + "%'";
-			else sql += " WHERE " + linkfield + " ilike '%" + wherevalue + "%'"; 
-			if(ordersql != null) sql += " ORDER BY " + ordersql;  
+			else sql += " WHERE " + linkfield + " ilike '%" + wherevalue + "%'";
+			if(ordersql != null) sql += " ORDER BY " + ordersql;
 			else sql += " ORDER BY " + lpfield;
 
 			ResultSet rs = st.executeQuery(sql);
@@ -187,7 +187,7 @@ public class DComboBox extends DField {
 			JOptionPane.showMessageDialog(datafield, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
         }
 	}
-	
+
 	public void setText(String ldata) {
 		if(ldata==null) ldata="";
 		int lp = lplist.indexOf(ldata);
@@ -201,7 +201,7 @@ public class DComboBox extends DField {
 	public String getKey(String ldata) {
 		String rtkey = "";
 		if(linkkey!=0) {
-			try {	
+			try {
 				sql = "SELECT " + linkfield + " FROM " + lptable;
 				sql += " WHERE " + lpkey + " = '" + ldata + "'";
 
@@ -220,14 +220,14 @@ public class DComboBox extends DField {
 	public String getText() {
 		String combovalue = "";
 		if(datafield.getSelectedIndex() == -1) {
-			combovalue = "-1";
+			combovalue = "null";
 		} else if (iseditable) {
 			combovalue = (String)datafield.getSelectedItem();
 		} else {
 			int lp = datafield.getSelectedIndex();
 			combovalue = lplist.get(lp);
 		}
-		
+
 		return combovalue;
 	}
 
@@ -241,7 +241,7 @@ public class DComboBox extends DField {
 			int lp = datafield.getSelectedIndex();
 			combovalue = lplist.get(lp);
 		}
-		
+
 		return combovalue;
 	}
 }

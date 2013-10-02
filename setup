@@ -14,18 +14,17 @@ CLASSPATH=".:sesame.lib.jar:/usr/sesame/build/lib/liquidlnf.jar:/usr/sesame/buil
 javac -classpath $CLASSPATH *.java
 /usr/java/jdk1.6.0_26/bin/jar cmf manifest sesame.jar sesame.class
 
-/usr/java/jdk1.6.0_26/bin/jarsigner -keystore /usr/sesame/build/lib/SesameSign sesame.lib.jar SesameSign
-/usr/java/jdk1.6.0_26/bin/jarsigner -keystore /usr/sesame/build/lib/SesameSign sesame.jar SesameSign
+jarsigner -keystore /usr/sesame/build/lib/SesameSign sesame.lib.jar SesameSign
+jarsigner -keystore /usr/sesame/build/lib/SesameSign sesame.jar SesameSign
 
 #immutable flag
 chattr +i /usr/sesame/systems/runtime.xml
 
-cp sesame.lib.jar /var/www/html/websms/launchpad/lib/ -f
-cp sesame.jar /var/www/html/websms/launchpad/lib/ -f
+cp sesame.lib.jar /opt/tomcat7/webapps.labs/kituo_fmp/launchpad/lib/ -f
+cp sesame.jar /opt/tomcat7/webapps.labs/kituo_fmp/launchpad/lib/ -f
 
 mv sesame.lib.jar /usr/sesame/build/sesame.lib.jar -f
 mv sesame.jar /usr/sesame/build/sesame.jar -f
-
 
 #testing here
 #svn info

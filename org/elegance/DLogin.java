@@ -52,8 +52,8 @@ public class DLogin implements ActionListener {
 	Box bh;		//horizontal box
 	JLabel sun;
 
-	private static String loggedin;
-	private static String currentUserId;		//currently logged in user
+	private static String loggedin;			//full name of the logged in user
+	private static String currentUserId;		//id of currently logged in user
 	public static String databasetype;
 	public static String dbprefix;			//support for multitenancy (single DB multiple apps)
 	static String application_dictionary;
@@ -83,8 +83,9 @@ public class DLogin implements ActionListener {
 		txtuser = new JTextField(25);
 		txtpassword = new JPasswordField(25);
 
-		//txtuser.setSize(25,20);
-		//txtpassword.setSize(25,20);
+		//setSize(w, h);
+		//txtuser.setSize(150,30);
+		//txtpassword.setSize(150,30);
 
 		txtpassword.setActionCommand("Login");
 
@@ -221,7 +222,7 @@ public class DLogin implements ActionListener {
 				      panel.setVisible(false);
 				      mainpanel.remove(panel);
 				      mainpanel.add(build.mainpanel);
-
+				      txtpassword.setText("");
 				      }
 				else{		//user with matching username and password
 				    lblmessage.setText("Incorrect Username/Password. Please try again.");
@@ -371,7 +372,7 @@ public class DLogin implements ActionListener {
 		else
 		    sql = "SELECT userid as user_id, superuser, rolename, fullname FROM " + (dbprefix.equals("")?"":dbprefix) + "users WHERE UPPER(username) = UPPER('" + user + "') AND userpasswd = MD5('" + pwd + "')";
 		}
-	    else{
+	    else{//NEW generation
 		sql = "SELECT user_id, is_super_user as superuser, role_name as rolename, full_name as fullname FROM " + (dbprefix.equals("")?"":dbprefix) + "users WHERE UPPER(user_name) = UPPER('" + user + "') AND user_passwd = MD5('" + pwd + "')";
 		}
 
