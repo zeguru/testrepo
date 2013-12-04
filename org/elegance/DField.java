@@ -7,6 +7,8 @@ public class DField {
 	public String name;
 	public String title;
 	public String defaultvalue;
+	public String tooltip;
+	//field.setToolTipText("This is the textfield's tooltip");
 	String filter;
 	public JLabel label;
 	public int x, y, w, h, lw;
@@ -16,12 +18,13 @@ public class DField {
 		y = Integer.valueOf(el.getAttribute("y")).intValue();
 		w = Integer.valueOf(el.getAttribute("w")).intValue();
 		h = Integer.valueOf(el.getAttribute("h")).intValue();
-		String slw = el.getAttribute("lw", "");		
+		String slw = el.getAttribute("lw", "");
 		lw = 120;
 		if(!slw.equals("")) lw = Integer.valueOf(slw).intValue();
-		defaultvalue = el.getAttribute("defaultvalue", "");	
+		defaultvalue = el.getAttribute("defaultvalue", "");
 		filter = el.getAttribute("filter");
-		
+		tooltip = el.getAttribute("tooltip", "");
+
 		name = el.getValue().trim();		//this is the value between the tags ie >x<
 		title = el.getAttribute("title");
 		if(title != null)
