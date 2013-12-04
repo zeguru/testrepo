@@ -919,7 +919,7 @@ public class DForm extends JPanel implements ActionListener {
 			}
 		}
 		for(DCheckBox field : checkbox) field.setNew();
-		//for(DTextArea field : textarea) field.setText("");
+		for(DTextDate field : textdate) field.setNew();
 		for(DTextArea field : textarea) field.setNew();
 		for(DTextDecimal field : textdecimal) field.setNew();
 		for(DEditor field : editor) field.setText("");

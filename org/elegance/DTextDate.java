@@ -59,6 +59,10 @@ public class DTextDate extends DField implements MouseListener {
 		calendar.panel.setSize(w+lw, h+ch);
     }
 
+      public void setNew() {
+		setText(defaultvalue);
+	}
+
 	public void setText(String ldata) {
 		if(ldata==null) {
 			datafield.setText("");
@@ -86,7 +90,7 @@ public class DTextDate extends DField implements MouseListener {
 		String mydate = datafield.getText();
 
 		if(mydate.length()>0) {
-			
+
     		try {
                 Date psdate = new Date();
 				SimpleDateFormat dateparse = new SimpleDateFormat();
@@ -97,7 +101,7 @@ public class DTextDate extends DField implements MouseListener {
 				else if(mydate.indexOf(' ')>0) dateparse.applyPattern("MMM dd, yyyy");
 
                 psdate = dateparse.parse(mydate);
-                
+
         		SimpleDateFormat dateformatter = new SimpleDateFormat("yyyy-MM-dd");
         		mydate = dateformatter.format(psdate);
             } catch(ParseException ex) {
@@ -106,7 +110,7 @@ public class DTextDate extends DField implements MouseListener {
 				JOptionPane.showMessageDialog(datafield, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
             }
 		}
-      
+
 		return mydate;
 	}
 
@@ -114,7 +118,7 @@ public class DTextDate extends DField implements MouseListener {
 		String mydate = datafield.getText();
 
 		if(mydate.length()>0) {
-			
+
     		try {
                 Date psdate = new Date();
 				SimpleDateFormat dateparse = new SimpleDateFormat();
@@ -125,7 +129,7 @@ public class DTextDate extends DField implements MouseListener {
 				else if(mydate.indexOf(' ')>0) dateparse.applyPattern("MMM dd, yyyy");
 
                 psdate = dateparse.parse(mydate);
-                
+
         		SimpleDateFormat dateformatter = new SimpleDateFormat("dd-MMM-yyyy");
         		mydate = dateformatter.format(psdate);
             } catch(ParseException ex) {
@@ -134,7 +138,7 @@ public class DTextDate extends DField implements MouseListener {
 				JOptionPane.showMessageDialog(datafield, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
             }
 		}
-      
+
 		return mydate;
 	}
 
