@@ -33,7 +33,7 @@ import org.apache.lucene.queryParser.ParseException;
 The Container for Grids, Forms, Tabs, Reports etc
 */
 
-public class DContainer extends JInternalFrame implements MouseListener, Runnable {
+public class DContainer extends JInternalFrame implements MouseListener, Runnable, FocusListener {
 
 	public List<DForm> forms;
 	public List<DReport> reports;
@@ -299,7 +299,6 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
 		for(DGrid grid : grids) grid.table.addMouseListener(this);
 
 		// add click to the form components
-/*
 		for(DForm form : forms) {
 			form.panel.addMouseListener(this);
 			for(DTextField field : form.textfield) field.datafield.addFocusListener(this);
@@ -316,7 +315,7 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
 			for(DEditor field : form.editor) field.datafield.addFocusListener(this);
 			//for(DFile field : form.file) field.datafield.addFocusListener(this);
 		}
-*/
+
 		// add click to the filter components
         for(DFilter filter : filters)
 			filter.panel.addMouseListener(this);
@@ -650,40 +649,40 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
 		}
 	}
 
-//     public void focusGained(FocusEvent e) {
-// 		//System.out.println("Focus gained :" + e.getComponent().getParent().getParent().getName());
-// 		if(e.getComponent().getParent().getParent().equals(toppane)) {
-// 			setItem("istop");
-// 			}
-// 		else if(e.getComponent().getParent().getParent().equals(bottompane)) {
-// 			setItem("isbottom");
-// 			}
-// 		else if(e.getComponent().getParent().getParent().equals(leftpane)) {
-// 			setItem("isleft");
-// 			}
-//
-// 		else if(e.getComponent().getParent().getParent().getParent().equals(toppane)) {
-// 			setItem("istop");
-// 			}
-// 		else if(e.getComponent().getParent().getParent().getParent().equals(bottompane)) {
-// 			setItem("isbottom");
-// 			}
-// 		else if(e.getComponent().getParent().getParent().getParent().equals(leftpane)) {
-// 			setItem("isleft");
-// 			}
-//
-// 		else if(e.getComponent().getParent().getParent().getParent().getParent().equals(toppane)) {
-// 			setItem("istop");
-// 			}
-// 		else if(e.getComponent().getParent().getParent().getParent().getParent().equals(bottompane)) {
-// 			setItem("isbottom");
-// 			}
-// 		else if(e.getComponent().getParent().getParent().getParent().getParent().equals(leftpane)) {
-// 			setItem("isleft");
-// 			}
-// 	}
-//
-//     public void focusLost(FocusEvent e) { }
+    public void focusGained(FocusEvent e) {
+		//System.out.println("Focus gained :" + e.getComponent().getParent().getParent().getName());
+		if(e.getComponent().getParent().getParent().equals(toppane)) {
+			setItem("istop");
+			}
+		else if(e.getComponent().getParent().getParent().equals(bottompane)) {
+			setItem("isbottom");
+			}
+		else if(e.getComponent().getParent().getParent().equals(leftpane)) {
+			setItem("isleft");
+			}
+
+		else if(e.getComponent().getParent().getParent().getParent().equals(toppane)) {
+			setItem("istop");
+			}
+		else if(e.getComponent().getParent().getParent().getParent().equals(bottompane)) {
+			setItem("isbottom");
+			}
+		else if(e.getComponent().getParent().getParent().getParent().equals(leftpane)) {
+			setItem("isleft");
+			}
+
+		else if(e.getComponent().getParent().getParent().getParent().getParent().equals(toppane)) {
+			setItem("istop");
+			}
+		else if(e.getComponent().getParent().getParent().getParent().getParent().equals(bottompane)) {
+			setItem("isbottom");
+			}
+		else if(e.getComponent().getParent().getParent().getParent().getParent().equals(leftpane)) {
+			setItem("isleft");
+			}
+	}
+
+    public void focusLost(FocusEvent e) { }
 
 	public void updateView(){
 			System.out.println("UPDATING VIEW");
