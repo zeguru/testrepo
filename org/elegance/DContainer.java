@@ -299,6 +299,7 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
 		for(DGrid grid : grids) grid.table.addMouseListener(this);
 
 		// add click to the form components
+/*
 		for(DForm form : forms) {
 			form.panel.addMouseListener(this);
 			for(DTextField field : form.textfield) field.datafield.addFocusListener(this);
@@ -315,7 +316,7 @@ public class DContainer extends JInternalFrame implements MouseListener, Runnabl
 			for(DEditor field : form.editor) field.datafield.addFocusListener(this);
 			//for(DFile field : form.file) field.datafield.addFocusListener(this);
 		}
-
+*/
 		// add click to the filter components
         for(DFilter filter : filters)
 			filter.panel.addMouseListener(this);

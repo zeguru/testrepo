@@ -14,7 +14,6 @@ public class DTextField extends DField {
 	public JTextField datafield;
 	public int cmbkey=0;
 	public boolean enabled=true;
-	//public String tooltip;
 
     public DTextField(DElement el, JPanel lpanel) {
 		super(el);
@@ -24,10 +23,7 @@ public class DTextField extends DField {
 			datafield.setHorizontalAlignment(JTextField.LEADING);
 			datafield.setCaretPosition(0);
 
-			if(!tooltip.equals("")) {
-			//	tooltip = fielddef.getAttribute("tooltip");
-				  datafield.setToolTipText(tooltip);
-				}
+
 
 			if (el.getAttribute("enabled", "").equals("false")) {
 				enabled = false;
@@ -40,6 +36,10 @@ public class DTextField extends DField {
 				//enabled = false;
 				//datafield.setEnabled(false);
 			//}
+
+			if(!tooltip.equals("")) {
+				  datafield.setToolTipText(tooltip);
+				}
 
 			datafield.setActionCommand(Integer.toString(cmbkey));
 
