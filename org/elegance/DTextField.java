@@ -1,7 +1,7 @@
 package org.elegance;
 
 /*
-we can have an attribute upload="true" (+ file="pdf" or "image", etc) so that the textbox is uneditable and pops a file open dialog when clicked. 
+we can have an attribute upload="true" (+ file="pdf" or "image", etc) so that the textbox is uneditable and pops a file open dialog when clicked.
 may also have a tooltip
 */
 
@@ -18,16 +18,17 @@ public class DTextField extends DField {
 
     public DTextField(DElement el, JPanel lpanel) {
 		super(el);
-		
+
 			datafield = new JTextField();
 
 			datafield.setHorizontalAlignment(JTextField.LEADING);
 			datafield.setCaretPosition(0);
-				
-			//if(!el.getAttribute("tooltip", "").equals("")) {			
-			//	tooltip = fielddef.getAttribute("tooltip");			
-			//	}
-			
+
+			if(!tooltip.equals("")) {
+			//	tooltip = fielddef.getAttribute("tooltip");
+				  datafield.setToolTipText(tooltip);
+				}
+
 			if (el.getAttribute("enabled", "").equals("false")) {
 				enabled = false;
 				datafield.setEnabled(false);
@@ -42,18 +43,18 @@ public class DTextField extends DField {
 
 			datafield.setActionCommand(Integer.toString(cmbkey));
 
-			if(title.length()>0) 
+			if(title.length()>0)
 				lpanel.add(label);
 			lpanel.add(datafield);
 
-			setPos();		
+			setPos();
 	}
-	
-    public void setPos() {
-    	super.setPos();
-        datafield.setLocation(x+lw, y);
-    	datafield.setSize(w, h);
-    }
+
+	public void setPos() {
+	    super.setPos();
+	    datafield.setLocation(x+lw, y);
+	    datafield.setSize(w, h);
+	}
 
 	public void setNew() {
 		setText(defaultvalue);
@@ -66,5 +67,5 @@ public class DTextField extends DField {
 
 	public String getText() {
 		return datafield.getText();
-	}		
+	}
 }
