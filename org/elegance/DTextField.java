@@ -14,7 +14,7 @@ public class DTextField extends DField {
 	public JTextField datafield;
 	public int cmbkey=0;
 	public boolean enabled=true;
-	public String tooltip;
+	//public String tooltip;
 
     public DTextField(DElement el, JPanel lpanel) {
 		super(el);
