@@ -370,8 +370,8 @@ public class DLogin implements ActionListener {
 	    // check for super user privillages
 	    String sql;
 	    if(application_dictionary == null){ //backward compatibility OLD SYSTEM - before 2013
-		if (user.equals("root") && pwd.equals(""))
-		    sql = "SELECT user_id as user_id, is_super_user, role_name, full_name FROM " + (dbprefix.equals("")?"":dbprefix) + "users WHERE UPPER(user_name) = UPPER('" + user + "')";
+		if (user.equals("root") && pwd.equals(""))		//this should never be used any more
+		    sql = "SELECT user_id as user_id, is_super_user as superuser, role_name as rolename, full_name as fullname FROM " + (dbprefix.equals("")?"":dbprefix) + "users WHERE UPPER(user_name) = UPPER('" + user + "')";
 		else
 		    sql = "SELECT userid as user_id, superuser, rolename, fullname FROM " + (dbprefix.equals("")?"":dbprefix) + "users WHERE UPPER(username) = UPPER('" + user + "') AND userpasswd = MD5('" + pwd + "')";
 		}
