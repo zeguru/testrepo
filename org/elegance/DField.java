@@ -20,7 +20,9 @@ public class DField {
 		h = Integer.valueOf(el.getAttribute("h")).intValue();
 		String slw = el.getAttribute("lw", "");
 		lw = 120;
-		if(!slw.equals("")) lw = Integer.valueOf(slw).intValue();
+		if(!slw.equals(""))
+		    lw = Integer.valueOf(slw).intValue();
+
 		defaultvalue = el.getAttribute("defaultvalue", "");
 		filter = el.getAttribute("filter");
 		tooltip = el.getAttribute("tooltip", "");
