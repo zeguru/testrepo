@@ -158,10 +158,20 @@ public class DImport implements ActionListener {
 				if(filetype.equals("text")) importmodel.gettextdata(panel, delimiter);
 				if(filetype.equals("record")) importmodel.getrecorddata(panel);
 				if(filetype.equals("excel")){
-				    worksheet = JOptionPane.showInputDialog ( "Enter Worksheet Number" );
-				    System.out.println("worksheet = " + worksheet);
-				    //importmodel.getexceldata(panel, worksheet);
-				    }
+				    if(worksheet.compareTo("ask")==0){
+					    worksheet = JOptionPane.showInputDialog (toppanel, "Enter Worksheet Number" );
+					    int option = JOptionPane.showConfirmDialog(toppanel, "Import worksheet number " + worksheet + "?","Confirmation", JOptionPane.YES_NO_OPTION);
+					    if (option == JOptionPane.YES_OPTION ){ 		//     YES_OPTION,  NO_OPTION, CANCEL_OPTION, OK_OPTION, CLOSED_OPTION
+						importmodel.getexceldata(panel, worksheet);
+						}
+					    else{
+						System.out.println("OPTION  = " + option);
+						}
+					    }
+					}
+				    else{	//just import
+					importmodel.getexceldata(panel, worksheet);
+					}
 
 				upload.setEnabled(true);
 				}
