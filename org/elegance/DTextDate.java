@@ -50,6 +50,36 @@ public class DTextDate extends DField implements MouseListener {
 		setPos();
 	}
 
+
+    //ONLY USED by report FILTER component
+      public DTextDate(DElement el, JPanel lpanel, String def) {
+		super(el);
+
+		datafield = new JTextField();
+		datafield.setText(def);
+		calendar = new DCalendar(el);
+
+		if(title.length()>0) lpanel.add(label);
+		lpanel.add(datafield);
+		lpanel.add(calendar.panel);
+		calendar.panel.setVisible(false);
+
+		datafield.addMouseListener(this);
+		calendar.table.addMouseListener(this);
+
+		if(!el.getAttribute("ch", "").equals("")) {
+			ch = Integer.valueOf(el.getAttribute("ch")).intValue();
+		}
+
+		isEnabled = true;
+		if (el.getAttribute("enabled", "").equals("false")) {
+			datafield.setEnabled(false);
+			isEnabled = false;
+		}
+
+		setPos();
+	}
+
     public void setPos() {
     	super.setPos();
     	datafield.setLocation(x+lw, y);

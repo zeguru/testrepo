@@ -107,25 +107,25 @@ public class DTableDef extends AbstractTableModel {
 		for(DElement el : children) {
 			if(el.getName().equals("TEXTFIELD")) {
 
-        		if(!isfirst)
-					sql += ", ";
-            	else
-					isfirst = false;
+			    if(!isfirst)
+				sql += ", ";
+			    else
+				isfirst = false;
 
-            	sql += el.getValue().trim();
+			    sql += el.getValue().trim();
 
-				columnName.add(el.getValue().trim());
-				columnTitle.add(el.getAttribute("title"));
-				columnWidth.add(Integer.valueOf(el.getAttribute("w")) + 40);
+			    columnName.add(el.getValue().trim());
+			    columnTitle.add(el.getAttribute("title"));
+			    columnWidth.add(Integer.valueOf(el.getAttribute("w")) + 40);
 
-				if(el.getAttribute("edit", "false").equals("true"))
-					columnEdit.add(true);
-				else
-					columnEdit.add(false);
+			    if(el.getAttribute("edit", "false").equals("true"))
+				    columnEdit.add(true);
+			    else
+				    columnEdit.add(false);
 
-				String mytype = el.getAttribute("type");
-				columnType.add(mytype);
-				}
+			    String mytype = el.getAttribute("type");
+			    columnType.add(mytype);
+			    }
 			else if(el.getName().equals("SECURITY")) {
 				security.addsecurity(el, db);
 				}

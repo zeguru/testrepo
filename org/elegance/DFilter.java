@@ -46,7 +46,7 @@ public class DFilter {
 		if(fielddef.getAttribute("filterand") != null) filterand = true;
 		if(fielddef.getAttribute("filterwhere") != null) filterwhere = true;
 
-        for(DElement el : children) {	
+        for(DElement el : children) {
 			if(el.getName().equals("TEXTFIELD")) {
             	textfield.add(new DTextField(el, panel));
 			} else if (el.getName().equals("TEXTAREA")) {
@@ -56,7 +56,7 @@ public class DFilter {
 			} else if (el.getName().equals("COMBOBOX")) {
                 combobox.add(new DComboBox(el, panel, ldb));
 			} else if(el.getName().equals("TEXTDATE")) {
-                textdate.add(new DTextDate(el, panel));
+                textdate.add(new DTextDate(el, panel, el.getAttribute("defaultvalue","")));
 			} else if(el.getName().equals("TEXTTIME")) {
                 texttime.add(new DTextTime(el, panel));
 			} else if(el.getName().equals("DATESPIN")) {
@@ -104,7 +104,7 @@ public class DFilter {
 		String mystr = "";
 		if(!text.equals("")) {
 			if(isfirst) {
-				isfirst = false; 
+				isfirst = false;
 				if(filterand) mystr = " AND ";
 				if(filterwhere) mystr = " WHERE ";
 			}
