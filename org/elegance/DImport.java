@@ -157,7 +157,11 @@ public class DImport implements ActionListener {
 			if(e.getActionCommand().equals("Open File")) {
 				if(filetype.equals("text")) importmodel.gettextdata(panel, delimiter);
 				if(filetype.equals("record")) importmodel.getrecorddata(panel);
-				if(filetype.equals("excel")) importmodel.getexceldata(panel, worksheet);
+				if(filetype.equals("excel")){
+				    worksheet = JOptionPane.showInputDialog ( "Enter Worksheet Number" );
+				    System.out.println("worksheet = " + worksheet);
+				    //importmodel.getexceldata(panel, worksheet);
+				    }
 
 				upload.setEnabled(true);
 				}
