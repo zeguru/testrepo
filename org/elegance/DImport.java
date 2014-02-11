@@ -160,21 +160,32 @@ public class DImport implements ActionListener {
 				if(filetype.equals("excel")){
 				    if(worksheet.compareTo("ask")==0){
 					    worksheet = JOptionPane.showInputDialog (toppanel, "Enter Worksheet Number" );
-					    int option = JOptionPane.showConfirmDialog(toppanel, "Import worksheet number " + worksheet + "?","Confirmation", JOptionPane.YES_NO_OPTION);
-					    if (option == JOptionPane.YES_OPTION ){ 		//     YES_OPTION,  NO_OPTION, CANCEL_OPTION, OK_OPTION, CLOSED_OPTION
-						importmodel.getexceldata(panel, worksheet);
+
+					    if (worksheet != null){
+						int option = JOptionPane.showConfirmDialog(toppanel, "Import worksheet number " + worksheet + "?","Confirmation", JOptionPane.YES_NO_OPTION);
+
+						if (option == JOptionPane.YES_OPTION ){ 		//     YES_OPTION,  NO_OPTION, CANCEL_OPTION, OK_OPTION, CLOSED_OPTION
+						    importmodel.getexceldata(panel, worksheet);
+						    upload.setEnabled(true);
+						    }
+						else{
+						    System.out.println("OPTION  = " + option);
+						    upload.setEnabled(false);
+						    }
 						}
 					    else{
-						System.out.println("OPTION  = " + option);
+						upload.setEnabled(false);
 						}
-					    }
+					    worksheet = "ask";		//allow recovery
 					}
 				    else{	//just import
 					importmodel.getexceldata(panel, worksheet);
+					upload.setEnabled(true);
 					}
 
-				upload.setEnabled(true);
+
 				}
+			    }
 			if(e.getActionCommand().equals("Upload")) {
 				tabledef.insertrows(importmodel.rows);
 				importmodel.clearupload();
