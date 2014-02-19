@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
 
 import javax.swing.JPanel;
 
@@ -46,6 +45,10 @@ import java.awt.event.ActionEvent;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+
+import bsh.*;
 
 public class DBuild implements TreeSelectionListener, ActionListener, Runnable, InternalFrameListener  {
 	public DElement root;
@@ -396,6 +399,10 @@ public class DBuild implements TreeSelectionListener, ActionListener, Runnable, 
 			//runCommand(e.getActionCommand().split(">")[1]);	//get string on the right side of '>'
 			new RunCommandThread(e.getActionCommand().split("=>")[1]).start();
 			}
+		if(cmd.compareTo("bsh")==0){
+			//load baraza desk node
+			runBeanShellScript(e.getActionCommand().split("=>")[1]);
+			}
 
 		if(cmd.compareTo("Sticky Note")==0) {
 			//desktop.add(new StickyNote());
@@ -461,6 +468,35 @@ public class DBuild implements TreeSelectionListener, ActionListener, Runnable, 
 		}
 
    	}
+
+
+
+/**
+	* Inspired by: http://www.beanshell.org/examples/callscript.html
+	*/
+	public boolean runBeanShellScript(String _script){
+
+		try {
+		    Object obj = new bsh.Interpreter().source(_script);
+		    return true;
+		    }
+		catch(FileNotFoundException e){
+		    System.out.println("Script file missing: " + e.getMessage());
+		    return false;
+		    }
+		catch(IOException exxx){
+		    System.out.println("IO Exception: " + exxx.getMessage());
+		    return false;
+		    }
+		catch (TargetError ex ) {
+		    System.out.println("The script or code called by the script threw an exception: " + ex.getTarget() );
+		    return false;
+		    }
+		catch (EvalError exx ) {
+		    System.out.println("There was an error in evaluating the script:" + exx );
+		    return false;
+		    }
+	    }
 
 
 //open an XML desk
