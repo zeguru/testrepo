@@ -11,6 +11,11 @@ javac -classpath $CLASSPATH org/elegance/*.java
 /usr/java/jdk1.6.0_26/bin/jar cmf libmanifest sesame.lib.jar org/elegance/*.class org/elegance/images
 
 CLASSPATH=".:sesame.lib.jar:/usr/sesame/build/lib/liquidlnf.jar:/usr/sesame/build/lib/looks-2.2.2.jar:/usr/sesame/build/lib/oalnf.jar:/usr/sesame/build/lib/quaqua.jar:/usr/sesame/build/lib/jtunestable.jar:"
+CLASSPATH+= "/usr/sesame/build/lib/bsh-2.0b4.jar:"
+#CLASSPATH+= "/usr/sesame/build/lib/bsh-core-2.0b4.jar:"
+#CLASSPATH+= "/usr/sesame/build/lib/bsh-classgen-2.0b4.jar:"
+#CLASSPATH+= "/usr/sesame/build/lib/bsh-commands-2.0b4.jar:"
+
 javac -classpath $CLASSPATH *.java
 /usr/java/jdk1.6.0_26/bin/jar cmf manifest sesame.jar sesame.class
 

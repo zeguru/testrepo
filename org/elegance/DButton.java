@@ -22,7 +22,10 @@ import javax.swing.JLabel;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
+import bsh.*;		//Bean Shell stuff
 
 public class DButton {
 
@@ -157,6 +160,12 @@ public class DButton {
 				//load baraza desk node
 				openDesk(ell.getAttribute("desk"));
 				}
+
+			if(action.compareTo("bsh")==0){
+				//load baraza desk node
+				runBeanShellScript(ell.getAttribute("script"));
+				}
+
 			if(action.compareTo("system")==0){
 				runCommand(cmd);
 				}
@@ -228,6 +237,32 @@ public class DButton {
 
 	}
 
+	/**
+	* Inspired by: http://www.beanshell.org/examples/callscript.html
+	*/
+	public boolean runBeanShellScript(String _script){
+
+		try {
+		    Object obj = new bsh.Interpreter().source(_script);
+		    return true;
+		    }
+		catch(FileNotFoundException e){
+		    System.out.println("Script file missing: " + e.getMessage());
+		    return false;
+		    }
+		catch(IOException exxx){
+		    System.out.println("IO Exception: " + exxx.getMessage());
+		    return false;
+		    }
+		catch (TargetError ex ) {
+		    System.out.println("The script or code called by the script threw an exception: " + ex.getTarget() );
+		    return false;
+		    }
+		catch (EvalError exx ) {
+		    System.out.println("There was an error in evaluating the script:" + exx );
+		    return false;
+		    }
+	    }
 
 
 
