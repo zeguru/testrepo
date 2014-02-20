@@ -12,7 +12,7 @@ import java.awt.GridLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-class DImagePanel extends JPanel {
+public class DImagePanel extends JPanel {
 
 	private static BufferedImage img = null;
 	private int iw, ih;

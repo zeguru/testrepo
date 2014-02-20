@@ -66,7 +66,7 @@ public class DTree {
 		panel = new JPanel(new GridLayout(1,0));
 
 		topnode = new DTreeNode(lchild.getAttribute("name"), lchild.getAttribute("key", ""));
-       	tree = new DImageTree(img, topnode);
+		tree = new DImageTree(img, topnode);
 
     	tree.setCellRenderer(new SECellRenderer());		//my custom cell renderer
     	treeview = new JScrollPane(tree);

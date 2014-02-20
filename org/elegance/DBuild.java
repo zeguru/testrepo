@@ -400,10 +400,10 @@ public class DBuild implements TreeSelectionListener, ActionListener, Runnable, 
 			new RunCommandThread(e.getActionCommand().split("=>")[1]).start();
 			}
 		if(cmd.compareTo("bsh")==0){
-			//load baraza desk node
+			//run the beanshell script
+			System.out.println("preparing to run beanshell script " + e.getActionCommand().split("=>")[1]);
 			runBeanShellScript(e.getActionCommand().split("=>")[1]);
 			}
-
 		if(cmd.compareTo("Sticky Note")==0) {
 			//desktop.add(new StickyNote());
 			new StickyNote();
@@ -476,6 +476,7 @@ public class DBuild implements TreeSelectionListener, ActionListener, Runnable, 
 	*/
 	public boolean runBeanShellScript(String _script){
 
+		//System.out.println("preparing to run beanshell script " + e.getActionCommand().split("=>")[1]);
 		try {
 		    Object obj = new bsh.Interpreter().source(_script);
 		    return true;
@@ -498,6 +499,45 @@ public class DBuild implements TreeSelectionListener, ActionListener, Runnable, 
 		    }
 	    }
 
+
+//API to openup new possibilities. From here we can access any DESK from OpenSesame Framework
+// public static DContainer openWindow(String key){
+//
+// 		DContainer window = null;
+//
+// 		System.out.println("\nAPI: at openDesk() key = " + key);
+// 		int activeform = -1;
+//
+// 		activeform = DBuild.keylist.indexOf(key);
+//
+// 		cont = this.container;
+// 		dtop = DBuild.desktop;
+//
+// 		if(activeform < 0) return false;
+//
+// 		if(!cont.get(activeform).started) {		//if form is not started...
+// 			window = cont.get(activeform);
+// 			}
+//
+// // 		if(!cont.get(activeform).isVisible) {		//if form is not visible
+// // 			dtop.add(cont.get(activeform));
+// // 			window = cont.get(activeform);
+// // 			}
+// // 		else {		//?????
+// // 			try {
+// // 			    cont.get(activeform).setSelected(true);
+// // 				if(cont.get(activeform).isIcon()) {
+// // 					cont.get(activeform).setIcon(false);
+// // 					}
+// // 				}
+// // 			catch (java.beans.PropertyVetoException err) {
+// // 				activeform = -1;
+// // 				}
+// // 			}
+//
+//
+// 		return window;
+// 		}
 
 //open an XML desk
 public boolean openDesk(String key){
