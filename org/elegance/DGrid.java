@@ -279,7 +279,7 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 		// create grid data refresh
 		makechild(null);
 
-		//System.out.println(fielddef.getAttribute("name") + " : Grid Done");
+		System.out.println(fielddef.getAttribute("name") + " : Grid Done");
 	}
 
 	public DGrid(Connection ldb) {

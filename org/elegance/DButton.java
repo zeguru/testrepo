@@ -141,7 +141,7 @@ public class DButton {
 
 	public void buttonActionPerformed(ActionEvent e) {
 
-		try{
+		//try{
 			String action = e.getActionCommand();
 			//action event
 			if(action.compareTo("java")==0){
@@ -224,16 +224,17 @@ public class DButton {
 				      form.getParent().setVisible(false);
 				      openDesk(key);
 				      }
+				JOptionPane.showMessageDialog(panel, sqlreturn, "Status", JOptionPane.ERROR_MESSAGE);
 
 				}
 
 			//call refresh
 			//form.getParent().refreshGrids();
-			}
-		catch(Exception ex){
-			System.out.println("SQLException: " + ex.getMessage());
-			JOptionPane.showMessageDialog(panel, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
-		}
+			//}
+// 		catch(Exception ex){
+// 			System.out.println("SQLException: " + ex.getMessage());
+// 			JOptionPane.showMessageDialog(panel, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
+// 		}
 
 	}
 
