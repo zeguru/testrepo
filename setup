@@ -5,13 +5,14 @@
 cd $(dirname $0)
 
 CLASSPATH=".:/usr/sesame/build/lib/jasperreports-3.6.0.jar:/usr/sesame/build/lib/mail.jar:/usr/sesame/build/lib/poi-3.2-FINAL-20081019.jar:/usr/sesame/build/lib/quaqua.jar:/usr/sesame/build/lib/oalnf.jar:/usr/sesame/build/lib/jl1.0.jar:/usr/sesame/build/lib/mysql-connector-java-5.1.13-bin.jar:/usr/sesame/build/lib/lucene-core-2.4.1.jar:/usr/sesame/build/lib/jtunestable.jar:"
+CLASSPATH+= "/usr/sesame/build/lib/bsh-2.0b4.jar:"
 #CLASSPATH=".:/usr/sesame/build/lib/mysql-connector-java-5.1.13-bin.jar:"
 #CLASSPATH=".:/usr/sesame/build/lib/jasperreports-3.7.4.jar:/usr/sesame/build/lib/mail.jar:/usr/sesame/build/lib/poi-3.2-FINAL-20081019.jar:/usr/sesame/build/lib/quaqua.jar:/usr/sesame/build/lib/oalnf.jar:/usr/sesame/build/lib/jl1.0.jar:/usr/sesame/build/lib/lucene-core-2.4.1.jar:"
 javac -classpath $CLASSPATH org/elegance/*.java
 /usr/java/jdk1.6.0_26/bin/jar cmf libmanifest sesame.lib.jar org/elegance/*.class org/elegance/images
 
 CLASSPATH=".:sesame.lib.jar:/usr/sesame/build/lib/liquidlnf.jar:/usr/sesame/build/lib/looks-2.2.2.jar:/usr/sesame/build/lib/oalnf.jar:/usr/sesame/build/lib/quaqua.jar:/usr/sesame/build/lib/jtunestable.jar:"
-CLASSPATH+= "/usr/sesame/build/lib/bsh-2.0b4.jar:"
+
 #CLASSPATH+= "/usr/sesame/build/lib/bsh-core-2.0b4.jar:"
 #CLASSPATH+= "/usr/sesame/build/lib/bsh-classgen-2.0b4.jar:"
 #CLASSPATH+= "/usr/sesame/build/lib/bsh-commands-2.0b4.jar:"
