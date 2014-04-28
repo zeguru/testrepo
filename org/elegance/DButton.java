@@ -83,7 +83,7 @@ public class DButton {
 		cmd = el.getAttribute("command");
 		javaclass = el.getAttribute("javaclass");
 		args = el.getAttribute("args");
-		aftermath = el.getAttribute("aftermath");
+		aftermath = el.getAttribute("aftermath","undefined");
 
 		initButton();
 		}
@@ -131,7 +131,7 @@ public class DButton {
 			}
 		catch(SQLException ex) {
 			System.out.println("SQLException: " + ex.getMessage());
-			JOptionPane.showMessageDialog(panel, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
+			//JOptionPane.showMessageDialog(panel, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
 			return ex.getMessage();
 			}
 		}
@@ -225,7 +225,6 @@ public class DButton {
 				      openDesk(key);
 				      }
 				JOptionPane.showMessageDialog(panel, sqlreturn, "Status", JOptionPane.ERROR_MESSAGE);
-
 				}
 
 			//call refresh
