@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.sql.Time;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+//import java.sql.Types.DATE;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -56,6 +58,8 @@ import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.net.MalformedURLException;
 
+import com.toedter.calendar.JDateChooserCellEditor;
+
 public class DGrid implements MouseListener, ActionListener, ListSelectionListener {		//implement FocusListener
 	public JPanel panel, filterpanel;
 	public JScrollPane tableview;
@@ -72,6 +76,7 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 	String linkdata = null;
 	List<String> lplist;
 	Map<Integer, DGridCombo> combolist;
+	Map<Integer, DCalendar> calendarlist;
 	boolean xmlgrid;
 
 	DElement view;
@@ -100,6 +105,7 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 
 		lplist = new ArrayList<String>();
 		combolist =  new HashMap<Integer, DGridCombo>();
+		calendarlist = new HashMap<Integer,DCalendar>();
 
 		if(fielddef.getAttribute("filterkey") != null)
 			filterkey = Integer.valueOf(fielddef.getAttribute("filterkey")).intValue();
@@ -122,7 +128,8 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 		bgurl = fielddef.getAttribute("bgurl");
 
 		//tabledef = new DTableDef(fielddef, db, combolist);
-		tabledef = new DTableDef(fielddef, db, combolist, panel);
+		//tabledef = new DTableDef(fielddef, db, combolist, panel);
+		tabledef = new DTableDef(fielddef, db, combolist, calendarlist, panel);
 		sorter = new TableRowSorter<DTableDef>(tabledef);
 		table = new JTable(tabledef);
 
@@ -226,9 +233,13 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 			}
 		  }
 
-		// change the formater
+		// default render
 		table.setDefaultRenderer(Timestamp.class, new DDateTimeRenderer());
 		table.setDefaultRenderer(Time.class, new DTimeRenderer());
+		table.setDefaultRenderer(Date.class, new DDateRenderer());
+
+		//default editors
+		table.setDefaultEditor(Date.class, new DatePickerCellEditor());
 
 		// create filter panel on grid
 		filterdata = new JTextField();
@@ -254,6 +265,10 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 				DGridCombo gc = new DGridCombo(el, db);
 				combolist.put(i, gc);
 				}
+ 			if(el.getAttribute("calendar") != null) {
+ 				DCalendar gcal = new DCalendar(el);
+ 				calendarlist.put(i, gcal);
+ 				}
 			i++;
 			}
 
@@ -339,7 +354,10 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 		}
 	}
 
-	public void refresh() {
+//DefaultCellEditor datePickerCellEditor = new DatePickerCellEditor();
+//datePickerCellEditor.setClickCountToStart(1);
+
+	public void refresh(){
 
 		System.out.println("DEBUG: refresh():");
 
@@ -349,14 +367,25 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 		int i = 0;
 		for(Integer w : tabledef.columnWidth) {
 			TableColumn column = table.getColumnModel().getColumn(i);
+
+/*
+			try{
+			  System.out.println("columnType = " + tabledef.metaData.getColumnType(i+1));
+			  if(tabledef.metaData.getColumnType(i+1)==91){
+			      table.getColumnModel().getColumn(i+1).setCellEditor(datePickerCellEditor);
+			      }
+			  }
+			catch(SQLException e){
+			  System.out.println(e.getMessage());
+			  }
+*/
+
 			column.setPreferredWidth(w.intValue());
 			i++;
 		}
 	}
 
 	public void filter(String where) {
-
-
 
 		if(ordersql != null)
 		      where += " ORDER BY " + ordersql;
@@ -373,6 +402,7 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 
 		// Make combobox editors
 		comboEditor();
+		//dateEditor();
 	}
 
 	public void makechild(String key) {
@@ -401,6 +431,18 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 			comboColumn.setCellEditor(new DefaultCellEditor(gc.combo));
 		}
 	}
+
+// DefaultCellEditor datePickerCellEditor = new DatePickerCellEditor();
+// //datePickerCellEditor.setClickCountToStart(1);
+//
+//   	public void dateEditor() {
+//   		for(Integer i : calendarlist.keySet()) {
+//   			DCalendar gcal = calendarlist.get(i);
+//   			TableColumn calColumn = table.getColumnModel().getColumn(i);
+//   			calColumn.setCellEditor(datePickerCellEditor);
+//  			//calColumn.setCellEditor(new DefaultCellEditor(gcal.datetext));
+//   		}
+//   	  }
 
 	public void mousePressed(MouseEvent e) {}
 	public void mouseReleased(MouseEvent e) {}
@@ -529,6 +571,12 @@ public class DGrid implements MouseListener, ActionListener, ListSelectionListen
 			for(Integer i : combolist.keySet()) {
 				DGridCombo gc = combolist.get(i);
 				gc.filterList(getKey());
+			}
+
+			for(Integer i : calendarlist.keySet()) {
+				DCalendar gcal = calendarlist.get(i);
+				gcal.getKey();
+				//gcal.filterList(getKey());
 			}
 		}
 	}

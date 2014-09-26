@@ -23,7 +23,7 @@ public class DGridCombo {
 	public DGridCombo(DElement el, Connection db) {
 		//combolist definations
 		lptable = el.getAttribute("lptable");
-		lpfield = el.getAttribute("lpfield"); 
+		lpfield = el.getAttribute("lpfield");
 		lplink = el.getAttribute("lplink");
 		lpkey = el.getAttribute("lpkey");
 		updatefield = el.getAttribute("updatefield");
@@ -38,7 +38,8 @@ public class DGridCombo {
 	}
 
 	public void filterList(String filterkey) {
-		if ((lplink != null) && (filterkey != null)) getList(filterkey);
+		if ((lplink != null) && (filterkey != null))
+			getList(filterkey);
 	}
 
 	public void getList(String filterkey) {
@@ -48,7 +49,7 @@ public class DGridCombo {
 		if(wheresql != null) {
 			combosql += " WHERE " + wheresql;
 			if(lplink != null) combosql += " AND " + lplink + " = '" + filterkey + "'";
-			} 
+			}
 		else if(lplink != null) {
 			combosql += " WHERE " + lplink + " = '" + filterkey + "'";
 		}
@@ -67,7 +68,7 @@ public class DGridCombo {
 				}
 			crs.close();
 			cst.close();
-			} 
+			}
 		catch (SQLException ex) {
 			System.out.println("The SQL Exeption on : " + ex.getMessage());
 			}

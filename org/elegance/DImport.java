@@ -45,6 +45,7 @@ public class DImport implements ActionListener {
 	DImportModel importmodel;
 	DTableDef tabledef;
 	Map<Integer, DGridCombo> combolist;
+	Map<Integer, DCalendar> calendarlist;
 
 	private Connection conn;
 	private String procedure, deletesql, filetype, worksheet, delimiter;
@@ -65,9 +66,11 @@ public class DImport implements ActionListener {
 
 
 		combolist =  new HashMap<Integer, DGridCombo>();
+		calendarlist =  new HashMap<Integer, DCalendar>();
 
 		importmodel = new DImportModel(fielddef);
-		tabledef = new DTableDef(fielddef, db, combolist, toppanel);
+		//tabledef = new DTableDef(fielddef, db, combolist, toppanel);
+		tabledef = new DTableDef(fielddef, db, combolist, calendarlist, toppanel);
 		//tabledef = new DTableDef(fielddef, db, combolist);
 
 		datatable = new JTable(tabledef);	//db
