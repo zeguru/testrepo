@@ -117,20 +117,20 @@ public class sesame extends JApplet {
 				System.out.println("Background Image = " + bg_image);
 				}
 
-
 			if(mylook==null){
 				UIManager.setLookAndFeel("ch.randelshofer.quaqua.QuaquaLookAndFeel");			//original
 				//OyoahaLookAndFeel lnf = new OyoahaLookAndFeel();
 				//UIManager.setLookAndFeel(lnf);
 
-				//test 1
-/*				Skin theSkinToUse = SkinLookAndFeel.loadThemePack("themepack.zip");
+
+				/* test 1
+				Skin theSkinToUse = SkinLookAndFeel.loadThemePack("themepack.zip");
 				SkinLookAndFeel.setSkin(theSkinToUse);
 
 				// finally set the Skin Look And Feel
 				UIManager.setLookAndFeel(new SkinLookAndFeel());
+				*/
 
-					*/
 				//test
 				//UIManager.setLookAndFeel(ch.randelshofer.quaqua.QuaquaManager.getLookAndFeelClassName());
 

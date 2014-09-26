@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Vector;
 
+//import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 import javax.swing.table.AbstractTableModel;
@@ -32,12 +33,11 @@ public class DTableDef extends AbstractTableModel {
 
 	Statement st, upst, autost;
    	public ResultSet rs;
-	ResultSetMetaData metaData;
+	public ResultSetMetaData metaData;	//made public so that we can access from DGRID
 
 	public String updatetable, updatefield, tablename, sql, autofield, autonumber;
 
 	String keyfield;
-
 
 	//crosstab stuff
 	String rowid;		//field that does row identification
@@ -52,6 +52,7 @@ public class DTableDef extends AbstractTableModel {
 	public DSecurity security;
 	Connection mydb;
 	Map<Integer, DGridCombo> combolist;
+	Map<Integer, DCalendar> calendarlist;
 
 	public DTableDef(Connection db) {
 		columnName = new ArrayList<String>();
@@ -74,10 +75,12 @@ public class DTableDef extends AbstractTableModel {
 		}
 	}
 
-	public DTableDef(DElement fielddef, Connection db, Map<Integer, DGridCombo> combolist, JPanel p) {
+	//public DTableDef(DElement fielddef, Connection db, Map<Integer, DGridCombo> combolist, JPanel p) {
+	public DTableDef(DElement fielddef, Connection db, Map<Integer, DGridCombo> combolist, Map<Integer,DCalendar> calendarlist, JPanel p) {
 
 		children = new ArrayList<DElement>(fielddef.getElements());
 		this.combolist = combolist;
+		this.calendarlist = calendarlist;
 		this.parentPanel = p;
 
 		columnName = new ArrayList<String>();
@@ -222,8 +225,8 @@ public class DTableDef extends AbstractTableModel {
 			rows.clear();
            	while (rs.next()) {
            		Vector newRow = new Vector();
-               	for (int i = 1; i <= columnTitle.size(); i++) {
-               		newRow.addElement(rs.getObject(i));
+			for (int i = 1; i <= columnTitle.size(); i++) {
+			    newRow.addElement(rs.getObject(i));
 					}
 			   	rows.addElement(newRow);
 				}
@@ -239,30 +242,35 @@ public class DTableDef extends AbstractTableModel {
 	public void refresh() { // Get all rows.
 		if(security.isread) {
 
-			//System.out.println("Grid Refresh SQL = " + sql);
-			try {
-				rs.close();
-				rs = st.executeQuery(sql);
+		//System.out.println("Grid Refresh SQL = " + sql);
+		try {
+			rs.close();
+			rs = st.executeQuery(sql);
 
-				keylist.clear();
-				rowidlist.clear();
-            	rows.clear();
-            	while (rs.next()) {
-            		Vector newRow = new Vector();
-                	for (int i = 1; i <= columnTitle.size(); i++) {
-
-						if(columnType.get(i-1)!=null) {
-							if(columnType.get(i-1).equals("boolean")) newRow.addElement(rs.getBoolean(i));
-						} else newRow.addElement(rs.getObject(i));
-				    }
-					keylist.add(rs.getString("keyfield"));
-					rowidlist.add(rs.getString("rowid"));
-                	rows.addElement(newRow);
-	      		}
-  		} catch(SQLException ex) {
+			keylist.clear();
+			rowidlist.clear();
+			rows.clear();
+			while (rs.next()) {
+				Vector newRow = new Vector();
+				for (int i = 1; i <= columnTitle.size(); i++) {
+				      if(columnType.get(i-1)!=null) {
+					      if(columnType.get(i-1).equals("boolean"))
+						  newRow.addElement(rs.getBoolean(i));
+					      if(columnType.get(i-1).equals("calendar"))
+						  newRow.addElement(rs.getString(i));
+					    }
+				      else
+					  newRow.addElement(rs.getObject(i));
+				      }
+				keylist.add(rs.getString("keyfield"));
+				rowidlist.add(rs.getString("rowid"));
+				rows.addElement(newRow);
+				}
+			}
+		catch(SQLException ex) {
 			JOptionPane.showMessageDialog(parentPanel, ex.getMessage(), "Query error", JOptionPane.ERROR_MESSAGE);
        		 	System.out.println("Grid Refresh SQLException : " + ex.getMessage());
-     		}
+		      }
 
         	fireTableChanged(null); // Tell the listeners a new table has arrived.
 		}
@@ -295,28 +303,38 @@ public class DTableDef extends AbstractTableModel {
 		return Boolean.class;
 	    if(columnType.get(column).equals("icon"))
 		return Icon.class;
+	    if(columnType.get(column).equals("calendar"))
+		return String.class;
 	    }
 
         switch(type) {
-        case Types.CHAR:
-        case Types.VARCHAR:
-        case Types.LONGVARCHAR: return String.class;
-        case Types.BIT: return Boolean.class;
-	case Types.TINYINT:
-        case Types.SMALLINT:
-        case Types.INTEGER: return Integer.class;
-        case Types.BIGINT: return Long.class;
-        case Types.FLOAT:
-	case Types.REAL:
-        case Types.DOUBLE: return Double.class;
-	case Types.TIME: return Time.class;
-	case Types.TIMESTAMP: return Timestamp.class;
-        case Types.DATE: return Date.class;
-        default: return Object.class;
-        }
+	    case Types.CHAR:
+	    case Types.VARCHAR:
+	    case Types.LONGVARCHAR: return String.class;
+	    case Types.BIT: return Boolean.class;
+	    case Types.TINYINT:
+	    case Types.SMALLINT:
+	    case Types.INTEGER: return Integer.class;
+	    case Types.BIGINT: return Long.class;
+	    case Types.FLOAT:
+	    case Types.REAL:
+	    case Types.DOUBLE: return Double.class;
+	    case Types.TIME: return Time.class;
+	    case Types.TIMESTAMP: return Timestamp.class;
+	    case Types.DATE: return Date.class;
+	    default: return Object.class;
+	    }
     }
 
     public boolean isCellEditable(int row, int column) {
+		//System.out.println("isCellEditable? row=" + row + " col=" + column + " => " + columnEdit.get(column));
+
+		//if date force it to be editable
+// 		if(getColumnClass(column)==Date.class){
+// 		      System.out.println("found Date.class");
+// 		      return true;
+// 		      }
+
 		return columnEdit.get(column);
     }
 
@@ -335,7 +353,7 @@ public class DTableDef extends AbstractTableModel {
 
     // To edit a value on a table
     public void setValueAt(Object value, int row, int column) {
-		System.out.println("Row = " + row + " Col = " + column + " Key List = " + keylist.get(row) + " Value = " + value);
+		System.out.println("Row=" + row + ", Col=" + column + ", Keylist=" + keylist.get(row) + ", Value=" + value + ", columnClass=" + getColumnClass(column));
 		String mystr = "";
 
 		String myvalue = null;
@@ -345,6 +363,8 @@ public class DTableDef extends AbstractTableModel {
 		try {
 			if(getColumnClass(column)==String.class) {
 				DGridCombo gc = combolist.get(column);
+				DCalendar gcal = calendarlist.get(column);
+
 				if(gc == null) {
 
 					if(myvalue == null)
@@ -353,9 +373,10 @@ public class DTableDef extends AbstractTableModel {
 					      myvalue = myvalue.replaceAll("'", "\\'");
 					      mystr = "UPDATE " + updatetable + " SET " + columnName.get(column) + " = '" + myvalue + "'";
 					      }
+
 					}
 
-				else {		//if grid combo
+				else {		//if grid combo FOUND
 				      myvalue = gc.getKey(myvalue);
 				      String updatefield = gc.getUpdateField();
 
@@ -416,7 +437,9 @@ public class DTableDef extends AbstractTableModel {
 				      }
 				}
 			else if(getColumnClass(column)==Date.class){
-				System.out.println("DEBUG: found DATE but cant update for now");
+				System.out.println("DEBUG: found DATE");
+				mystr = "UPDATE " + updatetable + " SET " + columnName.get(column) + " = to_date('" + myvalue + "','YYYY-mm-dd')";
+				//System.out.println("DEBUG: found DATE");
 				}
 			else if(getColumnClass(column)== java.sql.Timestamp.class){
 				System.out.println("DEBUG: found TIMESTAMP but cant update for now");
@@ -633,9 +656,9 @@ public class DTableDef extends AbstractTableModel {
 				}
 			}
 		catch (SQLException ex) {
-        	System.out.println("The SQL Exeption on " + fname + " : " + ex);
-			}
-		}
+		      System.out.println("The SQL Exeption on " + fname + " : " + ex);
+		      }
+	}
 
 	public void savecvs(String filename) {
 		int i, j;
